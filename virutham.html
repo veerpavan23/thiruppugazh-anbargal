@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Viruthams Sung By Guruji - Thiruppugazh Anbargal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .audio-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
+    .audio-card h3 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.1rem; text-transform: capitalize; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">Viruthams Sung By Guruji</h2>
+      <div id="audio-list" class="grid grid-2">
+        <p class="text-center" style="grid-column: 1/-1;">Loading audio recordings...</p>
+      </div>
+    </div>
+  </main>
+  <script src="js/layout.js"></script>
+  <script>
+    const nameMappings = [
+      { keys: ["001", "kaithala"], title: "Kaithala with Vinayakar stuti – Nattai" },
+      { keys: ["001a", "vinaayagar"], title: "Viruttam Vinayakar – Nattai" },
+      { keys: ["003a", "agaval", "bhairavi"], title: "Agaval Viruththam in AnandaBhairavi" },
+      { keys: ["003", "umbar", "sithakalaba"], title: "Umbartharu - Anandhabhairavi" },
+      { keys: ["005a", "antham"], title: "Viruttam - Antham - Gowlai" },
+      { keys: ["005a", "aruvamum"], title: "Viruttam - Aruvamum - Hindolam" },
+      { keys: ["007", "kanagam", "sankarabaranam"], title: "Kanagam with Viruththam Sankarabaranam" },
+      { keys: ["007", "kanakam"], title: "Kanakanthiral with Viruttam Aruvamum - Shankarabharanam" },
+      { keys: ["007", "karuvadainthu", "varaali", "aruvamum"], title: "Kauruvadainthu with viruttam Aruvamum - Varali" },
+      { keys: ["007", "karuvadainthu", "andham"], title: "Karuvadainthu with viruttam Andham adi illa – Hindolam" },
+      { keys: ["007", "karuvadainthu"], title: "Karuvadainthu with Varali Viruththam" },
+      { keys: ["008a", "anthathi", "sankaraabaranam"], title: "Andhadhi illa viruttam Nilambari" },
+      { keys: ["008a", "neelambari"], title: "Viruttam - Nilambari" },
+      { keys: ["009a", "ainthu", "buthamum"], title: "Ainthu buthamum Virutham" },
+      { keys: ["009", "ainthubuthamum"], title: "indhu bhutamum viruttam in Hindolam" },
+      { keys: ["021a", "maanikkame"], title: "Mannikame viruttam – Karaharapriya" },
+      { keys: ["024", "thandai", "thiruvadiyum"], title: "Thandaiyani with viruttam Thiruvadiyum – Dhanyasi" },
+      { keys: ["029", "nalumainthu", "velpattu"], title: "Nalumainthu with viruttam Velpattu – Kedaragowlai" },
+      { keys: ["033", "padarpuvi", "sethanam"], title: "Padarpuvi with viruttam Sethanam thandhu – Panthuvarali" },
+      { keys: ["033", "padarpuvi", "sethu"], title: "Padharbuvi with viruttam Sethanam thandhu - Panthuvarali" },
+      { keys: ["037a", "senthur", "karuthu"], title: "Viruttam senthur karuthu – Begada" },
+      { keys: ["037", "manaththin", "senthurkaruthu"], title: "Manatthin with viruttam Senthur karuthu – Begada" },
+      { keys: ["041a", "maanikkame"], title: "Viruttam Manikkame - Purvikalyani" },
+      { keys: ["041", "vanjam", "senthurkaruthu"], title: "Vanjam with viruttam Senthurkaruthu – Purvikalyani" },
+      { keys: ["045", "vinthathin"], title: "Vindhadin with niraval – Yamunakalyani" },
+      { keys: ["050a", "padikintrilai", "nattakurunji"], title: "Viruttam Padikintrilai - Natakurunji" },
+      { keys: ["050a", "peruthargu"], title: "Viruttam Peruthargu – Mohanam" },
+      { keys: ["054a", "gathithanai"], title: "Gadhidanai viruttam in Dhanyasi" },
+      { keys: ["063", "oruvarai"], title: "Oruvarai with viruttam Padikintrilai – Dhanyasi" },
+      { keys: ["076", "vasanamiga"], title: "Vachanamiga with viruttam Padikindrilai - Ranjani" },
+      { keys: ["079a", "aanaatha", "maivarum"], title: "Aanaatha with viruththam Maivarum – Natakurinji" },
+      { keys: ["079", "anaatha", "maloon"], title: "Anaatha with viruttam Maalon marugane – Natakurinji" },
+      { keys: ["085a", "maivarum", "yamunakalyaani"], title: "Maivarum viruttam – Yamunakalyani" },
+      { keys: ["086", "kumaragurupara", "maivarum"], title: "Kumaragurupara with viruttam Maivarum – Bilahari" },
+      { keys: ["088", "sarana", "agama"], title: "Charanakamala with viruttam Aagama – Kalyani" },
+      { keys: ["096", "oruvarai", "seeramkaraa"], title: "Oruvarai with viruttam Seerankara – Hindolam" },
+      { keys: ["100", "yiruppaval", "aavikku"], title: "Yiruppaval with viruttam Aavikku - Vasantha" },
+      { keys: ["106a", "maalon"], title: "Viruttam Maalon - Hamsanandi" },
+      { keys: ["113", "thuppaarappa", "sintha"], title: "Thupparappa with viruttam Sintha – Behag" },
+      { keys: ["125", "udukka", "karuthathalai"], title: "Udukka with viruttam Karutthathalai – Kamboji / Kambodhi" },
+      { keys: ["137a", "maaloon"], title: "Vanjakalopa with viruttam Maalon – Thodi" },
+      { keys: ["137b", "vanjakaloba", "maloon"], title: "Vanjakalopa with viruttam Maalon – Thodu (contd)" },
+      { keys: ["160", "aiyumuru", "seeram"], title: "Aiyumuru with viruttam Seeramkara – Mohanam" },
+      { keys: ["183a", "velayuthan"], title: "Viruttam Velayudhan – Chandrakauns" },
+      { keys: ["227a", "neelasikandiyil"], title: "Viruttam Neelasikandiyil – Kalyani" },
+      { keys: ["233a", "gathithanai"], title: "Viruttam Gathithanai – Mohanam" },
+      { keys: ["363", "seritharum", "thoolaal"], title: "Seritharum with viruttam Thoolaal" },
+      { keys: ["373", "kuruthipulaal", "gnanamuthalvi"], title: "Kuruthipulal with viruttam Gyanamudhalvi" },
+      { keys: ["373", "kuruthipulaal"], title: "Kuruthipulaal" },
+      { keys: ["400", "yeluppu", "gathithanai"], title: "Yelupputhol with viruttam Gathithanai – Sindhubhairavi" },
+      { keys: ["400", "yelupputhol", "perutharkariya"], title: "Yelupputhol with viruttam Perutharku ariya" },
+      { keys: ["422", "perutharkariya"], title: "Thalaimayir with viruttam Peruthaku ariya - Yamunakalyani" }
+    ];
+
+    async function loadAudio() {
+      const container = document.getElementById('audio-list');
+      try {
+        const storage = firebase.storage();
+        const ref = storage.ref("virutham");
+        const res = await ref.list();
+        if (res.items.length === 0) {
+          container.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No recordings found.</p>';
+          return;
+        }
+
+        const list = await Promise.all(res.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          let rawName = item.name.split('.')[0].replace(/_/g, " ");
+          let title = rawName;
+          let searchName = rawName.toLowerCase();
+          let sortId = item.name; // Keep full filename for sorting
+          
+          // Apply mappings
+          for (const mapping of nameMappings) {
+            const match = mapping.keys.every(key => searchName.includes(key.toLowerCase()));
+            if (match) {
+              title = mapping.title;
+              // Custom sort override for specific user requirements (003A as #3, 003 as #4)
+              if (mapping.keys.includes("003a")) sortId = "003_0"; 
+              if (mapping.keys.includes("003") && mapping.keys.includes("umbar")) sortId = "003_1";
+              break;
+            }
+          }
+          
+          return { title, url, sortId };
+        }));
+
+        // Sort by our custom sortId
+        list.sort((a, b) => a.sortId.localeCompare(b.sortId));
+
+        container.innerHTML = list.map((item, index) => `
+          <div class="audio-card">
+            <h3>${index + 1}. ${item.title}</h3>
+            <audio controls style="width: 100%;">
+              <source src="${item.url}" type="audio/mpeg">
+            </audio>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Error loading audio.</p>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadAudio);
+  </script>
+</body>
+</html>

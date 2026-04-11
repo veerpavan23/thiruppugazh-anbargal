@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Major Events & Office Bearers - Thiruppugazh Anbargal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .office-bearers-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 0.9rem;
+      background: white;
+    }
+    .office-bearers-table th, .office-bearers-table td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    .office-bearers-table th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .office-bearers-table tr:nth-child(even) {
+      background-color: #fffaf5;
+    }
+    .office-bearers-table tr:hover {
+      background-color: #fff1e6;
+    }
+    .accordion-section {
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .accordion-header {
+      background: #f8f9fa;
+      padding: 1rem 1.5rem;
+      cursor: pointer;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.2s;
+    }
+    .accordion-header:hover {
+      background: #f1f3f5;
+    }
+    .accordion-content {
+      padding: 1.5rem;
+      display: none;
+    }
+    .accordion-content.open {
+      display: block;
+    }
+    .major-events-list {
+      list-style: none;
+      padding: 0;
+    }
+    .major-event-item {
+      display: flex;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid #eee;
+    }
+    .major-event-date {
+      font-weight: 700;
+      color: var(--primary-color);
+      min-width: 150px;
+      font-size: 1.1rem;
+    }
+    .tabs-container {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #eee;
+    }
+    .tab-btn {
+      padding: 1rem 2rem;
+      cursor: pointer;
+      font-weight: 700;
+      color: #777;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      color: var(--primary-color);
+      border-bottom-color: var(--primary-color);
+    }
+    .tab-panel {
+      display: none;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    .overflow-auto {
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <main class="container mt-2 mb-4">
+    <div class="card">
+      <h1 class="text-center" style="color: var(--primary-color); margin-bottom: 2rem;">Thiruppugazh Movement: History & Leadership</h1>
+      
+      <div class="tabs-container">
+        <div class="tab-btn active" id="tab0" onclick="switchTab(0)">Major Events</div>
+        <div class="tab-btn" id="tab1" onclick="switchTab(1)">Office Bearers</div>
+      </div>
+
+      <!-- Tab 0: Major Events -->
+      <div class="tab-panel active" id="panel0">
+        <h2 style="color: var(--secondary-color); margin-bottom: 1rem;">Milestones of our Journey</h2>
+        <p style="margin-bottom: 2rem; font-style: italic;">Guruji Sri A.S. Raghavan started teaching Thiruppugazh in 1958</p>
+        
+        <div class="major-events-list" id="major-events-dynamic">
+          <p>Loading historical records...</p>
+        </div>
+      </div>
+
+      <!-- Tab 1: Office Bearers -->
+      <div class="tab-panel" id="panel1">
+        <h2 style="color: var(--secondary-color); margin-bottom: 1.5rem;">Leadership Through the Years</h2>
+        
+        <!-- Accordion: 1987 - 1993 -->
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAcc(this)">
+            <span>1987 - 1993</span>
+            <span>▼</span>
+          </div>
+          <div class="accordion-content open">
+            <div class="overflow-auto">
+              <table class="office-bearers-table">
+                <thead>
+                  <tr>
+                    <th>Office Bearers</th>
+                    <th>Purpose of registration (26.8.1987)</th>
+                    <th>Purpose of accounts (26.8.87 to 31.3.90)</th>
+                    <th>1990 - 1993</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>PRESIDENT</td><td>Sri A.S. Raghavan</td><td>Sri A.S. Raghavan</td><td>Sri A.S. Raghavan</td></tr>
+                  <tr><td>VICE PRESIDENT</td><td>Sri S.B. Subramanian</td><td>Sri S.B. Subramanian</td><td>Sri A.G. Krishnan</td></tr>
+                  <tr><td>SECRETARY</td><td>Sri K. Lakshminarayanan</td><td>Sri G. Krishnan</td><td>Sri A.G. Krishnan</td></tr>
+                  <tr><td>JOINT SECRETARY</td><td>-</td><td>-</td><td>Sri N.R. Subbaram</td></tr>
+                  <tr><td>TREASURER</td><td>Sri N. Ramamurthi</td><td>Sri N. Ramamurthi</td><td>Sri N. Ramamurthi</td></tr>
+                  <tr><td>MEMBERS</td><td>Sri G. Sundaram, Sri A. Sundaram, Sri G. Krishnan, Sri T.M. Subramanian, Smt Lakshmi Kumari, Smt Jaya Ramachandran</td><td>-</td><td>Sri E.N. Murthy, Sri G. Sundaram, Sri A. Natarajan, Sri T.M. Subramanian, Smt S. Doraiswamy, Smt Lakshmi Kumari</td></tr>
+                  <tr><td>REGIONS (Chennai, Karnataka, Mumbai)</td><td>-</td><td>-</td><td>Sri S.K. Ramanathan, Sri R. Venkataraman, Sri A.S. Subramanian</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: 1993 - 2002 -->
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAcc(this)">
+            <span>1993 - 2002</span>
+            <span>▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="overflow-auto">
+              <table class="office-bearers-table">
+                <thead>
+                  <tr>
+                    <th>Office Bearers</th>
+                    <th>1993 - 1996</th>
+                    <th>1996 - 1999</th>
+                    <th>1999 - 2002</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>PRESIDENT</td><td>Sri A.S. Raghavan</td><td>Sri A.S. Raghavan</td><td>Sri A.S. Raghavan</td></tr>
+                  <tr><td>VICE PRESIDENT</td><td>Sri K. Lakshminarayanan</td><td>Sri G. Sundaram</td><td>Sri G. Sundaram</td></tr>
+                  <tr><td>SECRETARY</td><td>Sri E.N. Murthy</td><td>Sri E.N. Murthy</td><td>Sri E.N. Murthy</td></tr>
+                  <tr><td>JOINT SECRETARY</td><td>Smt S. Padma</td><td>Smt S. Padma</td><td>Smt S. Padma</td></tr>
+                  <tr><td>TREASURER</td><td>Sri N. Ramamurthi</td><td>Sri N. Ramamurthi</td><td>Sri N. Ramamurthi</td></tr>
+                  <tr><td>MEMBERS</td><td>Sri G. Sundaram, Sri M.B. Kumaraswamy, Sri N. Rajan, Sri K. Subbiah, Sri G.V. Subramanian</td><td>Sri G.V. Subramanian, Sri K. Subbiah, Sri M.R. Ramani, Smt Uma Balasubramanian</td><td>Sri K. Subbiah, Sri C V Jayaraman, Sri C N K Swamy, Smt Uma Balasubramanian, Smt Chandra P</td></tr>
+                  <tr><td>REGIONS</td><td>Sri A.S. Subramanian, Sri R. Venkataraman, Sri K.N. Sivaraman</td><td>Sri A.S. Subramanian, Sri R. Venkataraman, Smt Padma Venkataraman, Sri G Krishnan, Sri T V Ramachandran</td><td>Sri G Balasubramanian, Sri T V Ramachandran, Smt Padma Venkataraman, Sri N S Mani (Delhi)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: 2002 - 2008 -->
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAcc(this)">
+            <span>2002 - 2008</span>
+            <span>▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="overflow-auto">
+              <table class="office-bearers-table">
+                <thead>
+                  <tr>
+                    <th>Office Bearers</th>
+                    <th>2002 - 2004</th>
+                    <th>2004 - 2005</th>
+                    <th>2005 - 2008</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>PRESIDENT</td><td>Sri A.S. Raghavan</td><td>Sri A.S. Raghavan</td><td>Sri A.S. Raghavan</td></tr>
+                  <tr><td>VICE PRESIDENT</td><td>Sri Ganesh Sundaram</td><td>Sri EN Murthy</td><td>Sri Ganesh Sundaram</td></tr>
+                  <tr><td>SECRETARY</td><td>Smt S Padma</td><td>Smt S Padma</td><td>Smt S Padma</td></tr>
+                  <tr><td>JOINT SECRETARY</td><td>Smt Uma Balasubramanian</td><td>Smt Uma Balasubramanian</td><td>Smt Uma Balasubramanian</td></tr>
+                  <tr><td>TREASURER</td><td>Sri N Rajan</td><td>Sri N Rajan</td><td>Sri N Ramamurthi</td></tr>
+                  <tr><td>MEMBERS</td><td>Sri K Subbiah, Sri CV Jayaraman, Sri N Ramamurthi, Sri E N Muthy, Sri V Sethuraman</td><td>Sri K Subbiah, Sri C V Jayaraman, Sri N Ramamurthi, Sri V Sethuraman</td><td>Sri K Subbiah, Sri C V Jayaraman, Sri G Krishnan, Sri N Rajan, Smt Chandra P</td></tr>
+                  <tr><td>REGIONS</td><td>Sri G Balasubramanian, Sri KN Krishnamurthy, Smt Padma V</td><td>Sri G Balasubramanian, Sri KN Krishnamurthy, Smt Padma V</td><td>Sri G Balasubramanian, Sri KN Krishnamurthy, Smt Padma V</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accordion: 2008 - 2024 -->
+        <div class="accordion-section">
+          <div class="accordion-header" onclick="toggleAcc(this)">
+            <span>2008 - 2024</span>
+            <span>▼</span>
+          </div>
+          <div class="accordion-content">
+            <div class="overflow-auto">
+              <table class="office-bearers-table">
+                <thead>
+                  <tr>
+                    <th>Office Bearers</th>
+                    <th>2008 - 2011</th>
+                    <th>2011 - 2014</th>
+                    <th>2014 - 2017</th>
+                    <th>2017 - 2019</th>
+                    <th>2021 - 2023</th>
+                    <th>2024</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>PRESIDENT</td><td>Sri A.S. Raghavan</td><td>Smt Padma V</td><td>Sri KN Krishnamurthy</td><td>Sri KN Krishnamurthy</td><td>Sri Ganesh Sundaram</td><td>Sri Ganesh Sundaram</td></tr>
+                  <tr><td>VICE PRESIDENT</td><td>Sri Ganesh Sundaram</td><td>Sri Ganesh Sundaram</td><td>Sri Ganesh Sundaram</td><td>Sri Ganesh Sundaram</td><td>Sri K Balasubramanian</td><td>Sri K Balasubramanian</td></tr>
+                  <tr><td>SECRETARY</td><td>Smt S Padma</td><td>Smt S Padma</td><td>Sri R Nagesh</td><td>Sri R Nagesh</td><td>Sri R Nagesh</td><td>Sri N. Santhanam</td></tr>
+                  <tr><td>JOINT SECRETARY</td><td>Smt S. Padma</td><td>Smt S. Padma</td><td>Smt S. Padma</td><td>-</td><td>Sri N Santhanam</td><td>Sri Subramanian Raghavan</td></tr>
+                  <tr><td>TREASURER</td><td>Sri N. Ramamurthi</td><td>Sri N Rajan</td><td>Sri JA Kuppu Subramanian</td><td>Sri JA Kuppu Subramanian</td><td>Sri JA Kuppu Subramanian</td><td>Sri JA Kuppu Subramanian</td></tr>
+                  <tr><td>MEMBERS</td><td>Sri G Krishnan, Sri CV Jayaraman, Sri G Vasudevan, Smt Uma B, Smt Girija R</td><td>Sri G.V. Subramanian, Sri CV Jayaraman, Sri G Vasudevan, Smt Uma B, Smt Seetha V</td><td>Sri R Ramanathan, Sri N Rajan, Sri K Balasubramanian, Dr M Natarajan, Smt Vasantha P</td><td>Sri TS Sakthidharan, Sri RS Balaji, Sri K Balasubramanian, Smt Vasantha P, Sri AS Nagarajan</td><td>1. Sri RS Balaji, 2. Smt Vasantha P, 3. Sri R Subramanian, 4. Dr Girija Krishnan, 5. Sri AS Nagarajan</td><td>1. Dr. Girija Krishnan, 2. Girija Ramanathan, 3. Aparna Gopalakrishnan, 4. Dharini Ganesh, 5. Jayasree Vaideeswaran</td></tr>
+                  <tr><td>REGIONS</td><td>Sri G Balasubramanian, Sri KN Krishnamurthy, Smt Padma V, Sri R Thiagarajan</td><td>Sri G Balasubramanian, Sri KN Krishnamurthy, Sri R Thiagarajan</td><td>Sri G Balasubramanian, Sri AN Arumugan, Sri Ramnath S Mani</td><td>Sri G Balasubramanian, Sri SG Ramakrishnan, Sri Ramnath S Mani</td><td>1. Sri Ramnath Mani, 2. Sri S.G. Ramakrishnan, 3. Smt Rajalakshmi Balasubramanian</td><td>1. Sri Ramnath Mani, 2. Sri Kannamma Sundaram, 3. Smt Rajalakshmi Balasubramanian</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/layout.js"></script>
+  <script>
+    function switchTab(index) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(`tab${index}`).classList.add('active');
+      document.getElementById(`panel${index}`).classList.add('active');
+    }
+
+    function toggleAcc(header) {
+      const content = header.nextElementSibling;
+      const isOpen = content.classList.contains('open');
+      
+      // Close all others
+      document.querySelectorAll('.accordion-content').forEach(c => c.classList.remove('open'));
+      document.querySelectorAll('.accordion-header span:last-child').forEach(s => s.textContent = '▼');
+      
+      if (!isOpen) {
+        content.classList.add('open');
+        header.querySelector('span:last-child').textContent = '▲';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const listEl = document.getElementById('major-events-dynamic');
+      
+      if (!firebase.apps.length) {
+        firebase.initializeApp(globalFirebaseConfig);
+      }
+      const db = firebase.firestore();
+
+      try {
+        const doc = await db.collection("other").doc("events").get();
+        const data = doc.data();
+        if (data && data.data) {
+          let html = '';
+          data.data.forEach(item => {
+            html += `
+              <div class="major-event-item">
+                <div class="major-event-date">${item.date}</div>
+                <div class="major-event-content">${item.event}</div>
+              </div>`;
+          });
+          listEl.innerHTML = html;
+        } else {
+          listEl.innerHTML = '<p>No historical milestones found.</p>';
+        }
+      } catch (err) {
+        console.error("Error loading major events:", err);
+        listEl.innerHTML = '<p style="color:red;">Error loading historical data.</p>';
+      }
+    });
+  </script>
+</body>
+</html>

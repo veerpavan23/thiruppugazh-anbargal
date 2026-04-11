@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiruppugazh Anbargal - Guru Anjali</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <!-- Firebase v8 from CDN -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card" style="text-align: center;">
+      <h2 class="mb-2">Guru Anjali</h2>
+      
+      <div style="display:flex; flex-direction:column; gap:15px; font-size: 1.1em; align-items: center; justify-content:center;">
+        <a id="pdf1" href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">1. Guru Anjali 1998 (Loading...)</a>
+        <a id="pdf2" href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">2. Pavazha Vizha of guruji 2003 (Loading...)</a>
+        <a id="pdf3" href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">3. Guruji Ninaivu Poongotthu 2018 (Loading...)</a>
+      </div>
+
+    </div>
+  </main>
+  <script src="js/layout.js"></script>
+  
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
+      projectId: "thiruppugazhanbargal-515e8",
+      storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const storage = firebase.storage();
+
+    async function loadPdfs() {
+      const pdfs = [
+        { id: "pdf1", path: "pdf/1. Guru Anjali 1998.pdf", text: "1. Guru Anjali 1998" },
+        { id: "pdf2", path: "pdf/2. Pavazha Vizha of guruji 2003.pdf", text: "2. Pavazha Vizha of guruji 2003" },
+        { id: "pdf3", path: "pdf/3. Guruji Ninaivu Poongotthu 2018.pdf", text: "3. Guruji Ninaivu Poongotthu 2018" }
+      ];
+
+      for (const pdf of pdfs) {
+        const el = document.getElementById(pdf.id);
+        try {
+          const url = await storage.ref(pdf.path).getDownloadURL();
+          el.href = url;
+          el.innerText = pdf.text;
+          el.className = "btn"; // Make it look active/orange
+        } catch (e) {
+          console.error("PDF not in Firebase Storage locally", e);
+          el.innerText = pdf.text + " (Unavailable)";
+          el.style.backgroundColor = "red";
+          
+          // Fallback to local path in case the user later provides the folder!
+          el.href = "./" + pdf.path;
+        }
+      }
+    }
+    document.addEventListener("DOMContentLoaded", loadPdfs);
+  </script>
+</body>
+</html>

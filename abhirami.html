@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Abhirami Andadi Pathikam - Thiruppugazh Anbargal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .audio-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
+    .audio-card h3 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.1rem; }
+    .pdf-section { background: #fffcf5; border: 1px dashed var(--primary-color); border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; align-items: center; }
+    .pdf-link { display: inline-flex; align-items: center; gap: 8px; background: white; padding: 10px 20px; border-radius: 6px; border: 1px solid #ddd; color: #d32f2f; font-weight: bold; text-decoration: none; transition: all 0.2s; }
+    .pdf-link:hover { background: #d32f2f; color: white; border-color: #d32f2f; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+    
+    /* Collapsible Styles */
+    .collapsible {
+      background-color: #fff9f0;
+      color: var(--primary-color);
+      cursor: pointer;
+      padding: 1.2rem;
+      width: 100%;
+      border: 1px solid #ffe8cc;
+      text-align: left;
+      outline: none;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .active, .collapsible:hover {
+      background-color: #fff1e6;
+    }
+    .collapsible:after {
+      content: '\002B';
+      color: var(--primary-color);
+      font-weight: bold;
+      float: right;
+      margin-left: 5px;
+    }
+    .active:after {
+      content: "\2212";
+    }
+    .content-box {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      margin-bottom: 2rem;
+    }
+    .content-box.open {
+      max-height: 5000px; /* Large enough for many cards */
+      padding: 1.5rem 1rem;
+    }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">Abhirami Andadi Pathikam</h2>
+      
+      <!-- PDF Script Section -->
+      <div id="pdf-list" class="pdf-section" style="display: none;"></div>
+
+      <!-- Abhirami Andadi Section (1-22) -->
+      <button class="collapsible active" id="btn-andadi">Abhirami Andadi</button>
+      <div class="content-box open" id="andadi-container">
+        <div id="andadi-list" class="grid grid-2">
+          <p class="text-center" style="grid-column: 1/-1;">Loading Andadi recordings...</p>
+        </div>
+      </div>
+
+      <!-- Abhirami Pathigam Section (23+) -->
+      <button class="collapsible" id="btn-pathigam">Abhirami Pathigam</button>
+      <div class="content-box" id="pathigam-container">
+        <div id="pathigam-list" class="grid grid-2">
+          <p class="text-center" style="grid-column: 1/-1;">Loading Pathigam recordings...</p>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script src="js/layout.js"></script>
+  <script>
+    async function loadAbhiramiResources() {
+      const andadiList = document.getElementById('andadi-list');
+      const pathigamList = document.getElementById('pathigam-list');
+      const pdfContainer = document.getElementById('pdf-list');
+      
+      try {
+        const storage = firebase.storage();
+        const ref = storage.ref("abhirami");
+        const res = await ref.list();
+        
+        if (res.items.length === 0) {
+          andadiList.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No resources found.</p>';
+          pathigamList.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No resources found.</p>';
+          return;
+        }
+
+        const items = await Promise.all(res.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          const isPdf = item.name.toLowerCase().endsWith('.pdf');
+          
+          // Original name processing
+          let originalName = item.name.split('.')[0]
+            .replace(/_/g, ' ')
+            .replace(/([a-z])([A-Z])/g, '$1 $2');
+          
+          // Extract leading number for logic
+          const numMatch = item.name.match(/^(\d+)/);
+          const num = numMatch ? parseInt(numMatch[1]) : 0;
+          
+          return { name: originalName, url, isPdf, num };
+        }));
+
+        // Sort items by original number
+        items.sort((a, b) => a.num - b.num);
+
+        const pdfFiles = items.filter(i => i.isPdf);
+        const audioFiles = items.filter(i => !i.isPdf);
+
+        // Render PDFs
+        if (pdfFiles.length > 0) {
+          pdfContainer.style.display = 'flex';
+          pdfContainer.innerHTML = `
+            <div style="width: 100%; text-align: center; font-weight: bold; margin-bottom: 0.5rem; color: #666;">Available Scripts (PDF):</div>
+            ${pdfFiles.map(pdf => `
+            <a href="${pdf.url}" target="_blank" class="pdf-link">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+              ${pdf.name}
+            </a>
+          `).join('')}`;
+        }
+
+        // Split Audio: 1-22 (Andadi) and 23+ (Pathigam)
+        const andadiFiles = audioFiles.filter(i => i.num >= 1 && i.num <= 22);
+        const pathigamFiles = audioFiles.filter(i => i.num >= 23);
+
+        const renderAudio = (files, container, isRenumbered = false) => {
+          if (files.length === 0) {
+            container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; padding: 2rem;">No recordings in this section.</p>';
+            return;
+          }
+          
+          container.innerHTML = files.map(item => {
+            let displayName = item.name;
+            if (isRenumbered) {
+              // Replace leading number with sequence starting from 1 (item.num - 22)
+              const newNum = (item.num - 22).toString().padStart(2, '0');
+              displayName = displayName.replace(/^(\d+)/, newNum + ' ');
+            } else {
+              // Just ensure space if it doesn't have it
+              displayName = displayName.replace(/^(\d+)([a-zA-Z])/, '$1 $2');
+            }
+            
+            return `
+              <div class="audio-card">
+                <h3>${displayName}</h3>
+                <audio controls style="width: 100%;">
+                  <source src="${item.url}" type="audio/mpeg">
+                </audio>
+              </div>
+            `;
+          }).join('');
+        };
+
+        renderAudio(andadiFiles, andadiList);
+        renderAudio(pathigamFiles, pathigamList, true);
+
+        // Initialize Collapsibles
+        const coll = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            const content = this.nextElementSibling;
+            content.classList.toggle("open");
+          });
+        }
+
+      } catch (err) {
+        console.error(err);
+        andadiList.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Error loading resources.</p>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadAbhiramiResources);
+  </script>
+</body>
+</html>

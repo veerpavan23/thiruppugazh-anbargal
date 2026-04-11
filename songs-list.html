@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiruppugazh Anbargal - List Of Songs</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .songs-list-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    .songs-list-table th, .songs-list-table td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+    .songs-list-table th { background-color: var(--primary-color); color: white; }
+  </style>
+
+  <!-- Firebase v8 from CDN -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">List Of Songs</h2>
+      <p style="margin-bottom:10px;">These are 21 sets of two lists which cover all songs, viruthams and vaguppu.</p>
+      <p style="margin-bottom:20px;">These lists have been prepared with great care to avoid repeat of ragas and complete all 503 songs. This can serve as a ready reckoner.</p>
+      
+      <div id="songs-list-container" class="mt-2 text-center">
+        <p>Loading lists from Firebase...</p>
+      </div>
+    </div>
+  </main>
+  
+  <script src="js/layout.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
+      authDomain: "thiruppugazhanbargal-515e8.firebaseapp.com",
+      projectId: "thiruppugazhanbargal-515e8",
+      storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    async function loadSongsList() {
+      const container = document.getElementById('songs-list-container');
+      try {
+        const doc = await db.collection("other").doc("songslist").get();
+        const list = doc.data().data;
+
+        let html = '<table class="songs-list-table">';
+        html += '<thead><tr><th>#</th><th>Name</th></tr></thead><tbody>';
+        
+        list.forEach((item, index) => {
+          html += `<tr>
+            <td>${index + 1}</td>
+            <td><a href="${item.url || ''}" target="_blank" rel="noreferrer">${item.name || ''}</a></td>
+          </tr>`;
+        });
+        
+        html += '</tbody></table>';
+        container.innerHTML = html;
+        container.classList.remove('text-center');
+      } catch (err) {
+        console.error("Firebase Firestore Error: ", err);
+        container.innerHTML = '<p style="color: red;">Error loading data. Ensure you have network access.</p>';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadSongsList);
+  </script>
+</body>
+</html>

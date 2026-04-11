@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiruppugazh Anbargal - CRK Meanings</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .list-container { margin-bottom: 25px; }
+    .list-container li { margin-bottom: 8px; font-size: 1.1em; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">All Songs With Meaning By CRK</h2>
+      
+      <div class="list-container">
+        <ul id="crk-meanings-list">
+          <li>Loading from Firebase...</li>
+        </ul>
+      </div>
+    </div>
+  </main>
+  
+  <script src="js/layout.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
+      authDomain: "thiruppugazhanbargal-515e8.firebaseapp.com",
+      projectId: "thiruppugazhanbargal-515e8",
+      storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const storage = firebase.storage();
+
+    async function loadCRKMeanings() {
+      try {
+        const crkRef = storage.ref("pdf");
+        const crkRes = await crkRef.list();
+        if (crkRes.items.length > 0) {
+           let crks = await Promise.all(crkRes.items.map(async (item) => {
+             const url = await item.getDownloadURL();
+             return { name: item.name, url };
+           }));
+           document.getElementById('crk-meanings-list').innerHTML = crks.map(p => `<li><a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a></li>`).join('');
+        } else {
+           const crkList = [
+             "Songs1-4,V Agavalbook1-1.pdf", "Songs5-52 book2.pdf", "Songs57-113 book3.pdf",
+             "Songs114-145 book4.pdf", "Songs146-202 book5.pdf", "Songs203-249 book6.pdf",
+             "Songs250-322book7-2.pdf", "Songs323-372 book8-1.pdf", "Songs373-421 book9.pdf",
+             "Songs422-493 book10.pdf", "Songs494-501book11.pdf", "Krishna Leela Songs.pdf", "Ramayanam Songs.pdf"
+           ];
+           document.getElementById('crk-meanings-list').innerHTML = crkList.map(item => `<li><span style="color: #666;">${item} (Source file missing in local - Check Firebase)</span></li>`).join('');
+        }
+      } catch (err) {
+        console.error("Firebase Storage Error: ", err);
+        document.getElementById('crk-meanings-list').innerHTML = "<li>Error loading from Firebase</li>";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadCRKMeanings);
+  </script>
+</body>
+</html>

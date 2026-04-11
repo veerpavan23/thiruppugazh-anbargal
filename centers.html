@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiruppugazh Anbargal - Centers</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    details { margin-bottom: 15px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9; }
+    summary { cursor: pointer; font-size: 1.2em; font-weight: bold; color: var(--primary-color); outline: none; }
+    .center-table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; }
+    .center-table th, .center-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    .center-table th { background-color: var(--primary-color); color: white; }
+    .contacts-table { width: 100%; border-collapse: collapse; background: white; margin-bottom: 15px; }
+    .contacts-table th, .contacts-table td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+    .contacts-table th { background-color: var(--secondary-color); color: white; }
+  </style>
+
+  <!-- Firebase v8 from CDN -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">Centers In India And World</h2>
+      
+      <div class="grid grid-2" style="gap:20px;">
+        <!-- Left Column: Hardcoded Centers -->
+        <div id="centers-accordion-container" style="padding-right: 10px;">
+          
+          <details open>
+            <summary>Delhi</summary>
+            <div style="padding: 10px;">
+              <h3 style="margin-bottom:10px; border-bottom: 1px solid var(--primary-color);">Thiruppugazh activities in Delhi</h3>
+              <p>Guruji started this movement in Delhi and it has spread world over. He used to conduct classes and bhajans almost all 7 days of the week.</p>
+              <table class="center-table">
+                <thead><tr><th>Event</th><th>Place</th></tr></thead>
+                <tbody>
+                  <tr><td>Padi Vizha</td><td>Malai mandir</td></tr>
+                  <tr><td>Arunagirinathar Vizha</td><td>Malai mandir</td></tr>
+                  <tr><td>Thai Poosam</td><td>Karunya Mahaganapathy Mandir at Mayur Vihar II</td></tr>
+                  <tr><td>Sri Ramanavami Bhajan</td><td>Mayur Vihar I, South Indian Association</td></tr>
+                </tbody>
+              </table>
+              <p><strong>Contact:</strong> Sri S.Ganesh (9810413265), Smt Girija (9953727467)</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Chennai</summary>
+            <div style="padding: 10px;">
+              <h3 style="margin-bottom:10px; border-bottom: 1px solid var(--primary-color);">Thiruppugazh activities in Chennai</h3>
+              <table class="center-table">
+                <thead><tr><th>No</th><th>Event</th><th>Place</th><th>Time</th></tr></thead>
+                <tbody>
+                  <tr><td>1</td><td>Krithikai</td><td>Kapaliswarar temple, Mylapore</td><td>Every Month</td></tr>
+                  <tr><td>2</td><td>Shashti</td><td>Ramana Kendra, Mylapore</td><td>Every Month</td></tr>
+                  <tr><td>3</td><td>Visakham</td><td>Marundeeswarar temple, Thiruvanmiyur</td><td>Every Month</td></tr>
+                  <tr><td>4</td><td>Padi Vizha</td><td>Kunrathur temple</td><td>Second Sunday of January</td></tr>
+                </tbody>
+              </table>
+              <p><strong>Contact:</strong> Sri Muthuswamy (9444140101), Smt Alamelu Santhanam (9962905136)</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Bombay</summary>
+            <div style="padding: 10px;">
+              <h3 style="margin-bottom:10px; border-bottom: 1px solid var(--primary-color);">Thiruppugazh activities in Bombay</h3>
+              <p>About 40 Classes under 20 teachers</p>
+              <table class="center-table">
+                <thead><tr><th>Event</th><th>Place</th></tr></thead>
+                <tbody>
+                  <tr><td>TIV</td><td>Vaikasi Visakam</td></tr>
+                  <tr><td>TIV</td><td>Aadi Moolam</td></tr>
+                  <tr><td>TIV</td><td>Adi Kruthigai Aadi Friday</td></tr>
+                </tbody>
+              </table>
+              <p><strong>Contact:</strong> Smt Raja Lakshmi Balasubramanian (9967664594)</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Bangalore</summary>
+            <div style="padding: 10px;">
+              <h3 style="margin-bottom:10px; border-bottom: 1px solid var(--primary-color);">Thiruppugazh activities in Bangalore</h3>
+              <p>Classes are conducted in several places throughout the week.</p>
+              <table class="center-table">
+                <thead><tr><th>Event</th><th>Place</th></tr></thead>
+                <tbody>
+                   <tr><td>TIV</td><td>Sashti, Krithigai, Moolam and Visakam</td></tr>
+                </tbody>
+              </table>
+              <p><strong>Contact:</strong> Sri R.Nagesh (9448089383)</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Hyderabad</summary>
+            <div style="padding: 10px;">
+              <h3 style="margin-bottom:10px; border-bottom: 1px solid var(--primary-color);">Thiruppugazh activities in Hyderabad</h3>
+              <p>Classes are held on all days of the week at various places by several teachers for last 30 yrs.</p>
+              <p><strong>Contact:</strong> Smt Lakshmi Venkatraman (9395528128)</p>
+            </div>
+          </details>
+
+          <details>
+            <summary>Pune</summary>
+            <div style="padding: 10px;">
+              <h3 style="margin-bottom:10px; border-bottom: 1px solid var(--primary-color);">Thiruppugazh activities in Pune</h3>
+              <p>Classes are conducted in different places by a team of teachers.</p>
+              <p><strong>Contact:</strong> Smt Dharini Ganesh (8793685864)</p>
+            </div>
+          </details>
+          
+          <details>
+            <summary>Other Global Centers</summary>
+            <div style="padding: 10px;">
+              <p><strong>Coimbatore:</strong> Sri VS Krishnan (6381606744)</p>
+              <p><strong>Thiruvananthapuram:</strong> Sri Balu Iyer (9447092866)</p>
+              <p><strong>Baroda:</strong> Mrs Rama (9727766292)</p>
+              <p><strong>Kolkata:</strong> Mr Viji kumar (9874753777)</p>
+              <p><strong>Toronto:</strong> Smt Shanta Krishnamurthy (001 416 888 9169)</p>
+              <p><strong>Dubai:</strong> Mrs Vidya Ram (00971 505518246)</p>
+              <p><strong>Singapore:</strong> Mrs Janaki Vishwanath (0065 967 099855)</p>
+            </div>
+          </details>
+
+        </div>
+
+        <!-- Right Column: Dynamic Firebase Contacts -->
+        <div>
+          <h3 style="margin-bottom:10px; border-bottom: 2px solid var(--primary-color);">Contacts India</h3>
+          <table class="contacts-table" id="contacts-india">
+            <thead><tr><th>Name</th><th>Place</th><th>Phone</th></tr></thead>
+            <tbody><tr><td colspan="3" class="text-center">Loading...</td></tr></tbody>
+          </table>
+
+          <h3 style="margin-top:20px; margin-bottom:10px; border-bottom: 2px solid var(--primary-color);">Contacts Overseas</h3>
+          <table class="contacts-table" id="contacts-overseas">
+            <thead><tr><th>Name</th><th>Place</th><th>Phone</th></tr></thead>
+            <tbody><tr><td colspan="3" class="text-center">Loading...</td></tr></tbody>
+          </table>
+
+          <h3 style="margin-top:20px; margin-bottom:10px; border-bottom: 2px solid var(--primary-color);">Online classes</h3>
+          <p>Online classes are going on across the globe, criss crossing varios continents. This has enabled thiruppugazh to reach many more homes far and wide.</p>
+          <div style="text-align:center; margin-top:15px;">
+            <img src="images/about/guru-2-min.png" alt="guruji" style="max-width:100%; border-radius:4px; margin-bottom:10px;">
+            <img src="images/about/about-guruji-7-min.png" alt="guruji" style="max-width:100%; border-radius:4px;">
+          </div>
+        </div>
+      </div>
+    
+    </div>
+  </main>
+  
+  <script src="js/layout.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
+      authDomain: "thiruppugazhanbargal-515e8.firebaseapp.com",
+      projectId: "thiruppugazhanbargal-515e8",
+      storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const db = firebase.firestore();
+
+    async function loadContacts() {
+      try {
+        const snapshot = await db.collection("phoneNumbers").orderBy("state", "asc").get();
+        let indiaHtml = '';
+        let overseasHtml = '';
+        
+        snapshot.forEach(doc => {
+          const contact = doc.data();
+          const row = `<tr>
+            <td>${contact.name || ''}</td>
+            <td>${contact.state || ''}</td>
+            <td>${contact.number || ''}</td>
+          </tr>`;
+          
+          if (contact.isIndia) {
+            indiaHtml += row;
+          } else {
+            overseasHtml += row;
+          }
+        });
+        
+        document.getElementById('contacts-india').querySelector('tbody').innerHTML = indiaHtml || '<tr><td colspan="3">No contacts</td></tr>';
+        document.getElementById('contacts-overseas').querySelector('tbody').innerHTML = overseasHtml || '<tr><td colspan="3">No contacts</td></tr>';
+      } catch (err) {
+        console.error("Firebase Firestore Error: ", err);
+        const errHtml = '<tr><td colspan="3" style="color:red;">Error loading contacts.</td></tr>';
+        document.getElementById('contacts-india').querySelector('tbody').innerHTML = errHtml;
+        document.getElementById('contacts-overseas').querySelector('tbody').innerHTML = errHtml;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadContacts);
+  </script>
+</body>
+</html>

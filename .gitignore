@@ -1,0 +1,8 @@
+.gemini/
+.idea/
+.vscode/
+node_modules/
+convert_centers.py
+check_firebase.html
+*.log
+.DS_Store

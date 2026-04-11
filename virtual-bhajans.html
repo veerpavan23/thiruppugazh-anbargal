@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Virtual Bhajans - Thiruppugazh Anbargal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .bhajan-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 20px; margin-bottom: 25px; border-top: 5px solid var(--primary-color); }
+    .bhajan-card h2 { color: var(--primary-color); margin-bottom: 15px; font-size: 1.4rem; }
+    .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: #000; }
+    .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+  </style>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h1 class="text-center mb-2">Virtual Bhajans</h1>
+      <div id="bhajans-list">
+        <p class="text-center">Loading bhajans...</p>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/layout.js"></script>
+  <script>
+    function extractVideoId(url) {
+      if (!url) return null;
+      const urlObj = new URL(url);
+      if (urlObj.searchParams.has('v')) return urlObj.searchParams.get('v');
+      if (urlObj.searchParams.has('list')) return 'videoseries?list=' + urlObj.searchParams.get('list');
+      return null;
+    }
+
+    async function loadBhajans() {
+      const container = document.getElementById('bhajans-list');
+      try {
+        const db = firebase.firestore();
+        const doc = await db.collection("other").doc("bhajans").get();
+        
+        if (!doc.exists) {
+            container.innerHTML = '<p class="text-center">No bhajans found.</p>';
+            return;
+        }
+
+        const data = doc.data();
+        const list = data.data || [];
+        // Note: The original code does .reverse()
+        list.reverse();
+
+        if (list.length === 0) {
+          container.innerHTML = '<p class="text-center">No bhajans found.</p>';
+          return;
+        }
+
+        container.innerHTML = list.map(item => {
+          const videoId = extractVideoId(item.url[0]); // item.url is an array in original data
+          let embedHtml = '';
+          if (videoId) {
+            embedHtml = `
+              <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+              </div>
+            `;
+          } else {
+            embedHtml = `<a href="${item.url[0]}" target="_blank" class="btn">Watch on YouTube</a>`;
+          }
+
+          return `
+            <div class="bhajan-card">
+              <h2>${item.name}</h2>
+              ${embedHtml}
+            </div>
+          `;
+        }).join('');
+
+      } catch (err) {
+        console.error("Firestore Error:", err);
+        container.innerHTML = '<p class="text-center" style="color: red;">Error loading bhajans. Please check your connection.</p>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadBhajans);
+  </script>
+</body>
+</html>

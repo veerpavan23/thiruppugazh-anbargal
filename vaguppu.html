@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vaguppu - Thiruppugazh Anbargal</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <style>
+        .audio-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
+        .audio-card h3 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.1rem; }
+        .vel-mayil-table { width: 100%; border-collapse: collapse; margin-top: 30px; }
+        .vel-mayil-table th, .vel-mayil-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .vel-mayil-table th { background-color: var(--primary-color); color: white; }
+        .yt-link { color: #c4302b; font-weight: bold; text-decoration: none; }
+    </style>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script src="js/config.js"></script>
+</head>
+<body>
+    <main class="container mt-2">
+        <div class="card">
+            <h2 class="text-center mb-2">Vaguppu</h2>
+            <div id="audio-list" class="grid grid-2">
+                <p class="text-center" style="grid-column: 1/-1;">Loading audio recordings...</p>
+            </div>
+            <div class="table-responsive">
+                <table class="vel-mayil-table">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Youtube Link</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=irruXf_hZiw&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=1" target="_blank">சீரப்ாத வகுப்பு</a></td></tr>
+                        <tr><td>2</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=9A7Y6_obVAo&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=2" target="_blank">தததவந்திரசங்க வகுப்பு</a></td></tr>
+                        <tr><td>3</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=Par3YCkrBJ4&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=3" target="_blank">தவல் வகுப்பு</a></td></tr>
+                        <tr><td>4</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=MSQYTWAYElE&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=4" target="_blank">திருதவளைக்காரன் வகுப்பு</a></td></tr>
+                        <tr><td>5</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=6NMF5Eugr6s&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=5" target="_blank">பபருதத்வசன வகுப்பு</a></td></tr>
+                        <tr><td>6</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=fLUBK9lK-dI&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=6" target="_blank">தவடிசச்ிகாவலன் வகுப்பு</a></td></tr>
+                        <tr><td>7</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=t14vyVT3Bi4&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=7" target="_blank">தசவகன் வகுப்பு</a></td></tr>
+                        <tr><td>8</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=0oV7iIxYdiw&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=8" target="_blank">புய வகுப்பு</a></td></tr>
+                        <tr><td>9</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=HuzrUBCcIRY&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=9" target="_blank">களைக்கணியல் வகுப்பு</a></td></tr>
+                        <tr><td>10</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=5eOGvcQ-O-I&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=10" target="_blank">மயில் வகுப்பு</a></td></tr>
+                        <tr><td>11</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=1yHLR8WqlQs&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=11" target="_blank">வீரவாை் வகுப்பு</a></td></tr>
+                        <tr><td>12</td><td><a class="yt-link" href="https://www.youtube.com/watch?v=jaw8WRwhxf4&list=PLb3Bd_b-r15aqWw3zcxXe2n-9o4HzIW4Z&index=12" target="_blank">திருப்பழநி வகுப்பு</a></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="js/layout.js"></script>
+    <script>
+        async function loadAudio() {
+            const container = document.getElementById('audio-list');
+            try {
+                const storage = firebase.storage();
+                const ref = storage.ref("vaguppu");
+                const res = await ref.list();
+                if (res.items.length === 0) {
+                    container.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No recordings found.</p>';
+                    return;
+                }
+                const list = await Promise.all(res.items.map(async (item) => {
+                    const url = await item.getDownloadURL();
+                    let name = item.name.replace('.mp3', '').replace('.mpeg', '');
+                    let number = parseInt(name.split('.')[0]) || 0;
+                    return { name, url, number };
+                }));
+                list.sort((a, b) => a.number - b.number);
+                container.innerHTML = list.map(item => `
+                    <div class="audio-card">
+                        <h3>${item.name}</h3>
+                        <audio controls style="width: 100%;">
+                            <source src="${item.url}" type="audio/mpeg">
+                        </audio>
+                    </div>
+                `).join('');
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Error loading audio.</p>';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', loadAudio);
+    </script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Feedback - Admin Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <main class="container">
+    <div class="admin-container">
+      <h2 class="text-center">User Feedback</h2>
+      
+      <!-- Auth Guard Redirect -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const auth = window.auth || firebase.auth();
+          auth.onAuthStateChanged(user => {
+            if (!user) {
+              window.location.href = 'login.html';
+            }
+          });
+        });
+      </script>
+
+      <div id="admin-dashboard" style="display: block;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <h2 id="dashboard-header">Feedback Inbox</h2>
+          <button id="logout-btn" class="btn btn-secondary btn-small">Sign Out</button>
+        </div>
+        
+        <p class="text-center" style="padding: 3rem; background: #f9f9f9; border-radius: 8px; color: #666; border: 1px dashed #ccc;">
+           User feedback data integration coming soon.
+        </p>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/layout.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const auth = window.auth;
+      const authView = document.getElementById('auth-view');
+      const dashboardView = document.getElementById('admin-dashboard');
+      const loginForm = document.getElementById('login-form');
+      const logoutBtn = document.getElementById('logout-btn');
+      const authError = document.getElementById('auth-error');
+
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          authView.style.display = 'none';
+          dashboardView.style.display = 'block';
+        } else {
+          authView.style.display = 'block';
+          dashboardView.style.display = 'none';
+        }
+      });
+
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+          authError.style.display = 'none';
+        } catch (error) {
+          authError.textContent = "Invalid credentials.";
+          authError.style.display = 'block';
+        }
+      });
+
+      logoutBtn.addEventListener('click', () => auth.signOut());
+    });
+  </script>
+</body>
+</html>

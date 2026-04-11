@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Valli Kalyanam - Thiruppugazh Anbargal</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .audio-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
+    .audio-card h3 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.1rem; text-transform: capitalize; }
+    .pdf-link { display: inline-block; padding: 10px 20px; background: #007bff; color: white !important; border-radius: 4px; text-decoration: none !important; margin-top: 20px; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">Valli Kalyanam</h2>
+      <div id="audio-list" class="grid grid-2">
+        <p class="text-center" style="grid-column: 1/-1;">Loading audio recordings...</p>
+      </div>
+      <div class="text-center mt-3" id="pdf-container">
+        <!-- PDF Link will be added here -->
+      </div>
+    </div>
+  </main>
+  <script src="js/layout.js"></script>
+  <script>
+    async function loadContent() {
+      const container = document.getElementById('audio-list');
+      const pdfContainer = document.getElementById('pdf-container');
+      try {
+        const storage = firebase.storage();
+        
+        // Load Audio
+        const audioRef = storage.ref("valli-kalyanam");
+        const audioRes = await audioRef.list();
+        if (audioRes.items.length > 0) {
+          const audioList = await Promise.all(audioRes.items.map(async (item) => {
+            const url = await item.getDownloadURL();
+            let name = item.name.split('.')[0].replace(/_/g, " ");
+            return { name, url };
+          }));
+          container.innerHTML = audioList.map(item => `
+            <div class="audio-card">
+              <h3>${item.name}</h3>
+              <audio controls style="width: 100%;">
+                <source src="${item.url}" type="audio/mpeg">
+              </audio>
+            </div>
+          `).join('');
+        } else {
+          container.innerHTML = '<p class="text-center" style="grid-column: 1/-1;">No audio recordings found.</p>';
+        }
+
+        // Load PDF
+        const pdfRef = storage.ref("resources/valli-kalyanam");
+        const pdfRes = await pdfRef.list();
+        if (pdfRes.items.length > 0) {
+          const pdfItem = pdfRes.items[0];
+          const pdfUrl = await pdfItem.getDownloadURL();
+          pdfContainer.innerHTML = `<a href="${pdfUrl}" target="_blank" class="pdf-link">Download Valli Kalyanam Book (PDF)</a>`;
+        }
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Error loading content.</p>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadContent);
+  </script>
+</body>
+</html>

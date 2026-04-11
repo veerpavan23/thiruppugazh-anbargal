@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiruppugazh Anbargal - Resources</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .list-container { margin-bottom: 25px; }
+    .list-container li { margin-bottom: 8px; font-size: 1.1em; }
+    details { margin-bottom: 10px; background: #f9f9f9; padding: 10px; border-radius: 5px; border: 1px solid #ddd; }
+    summary { font-size: 1.1em; font-weight: bold; cursor: pointer; color: var(--primary-color); }
+    .accordion-content { padding: 15px; text-align: center; }
+    .accordion-content img { max-width: 100%; border-radius: 8px; margin-bottom: 10px; }
+  </style>
+
+  <!-- Firebase v8 from CDN -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+</head>
+<body>
+  <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-4">TIV Book Regional</h2>
+      
+      <div class="list-container">
+        <ul id="tiv-book-list">
+          <li>Loading from Firebase...</li>
+        </ul>
+      </div>
+      
+    </div>
+  </main>
+  
+  <script src="js/layout.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
+      authDomain: "thiruppugazhanbargal-515e8.firebaseapp.com",
+      projectId: "thiruppugazhanbargal-515e8",
+      storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
+    };
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    const storage = firebase.storage();
+
+    async function loadTIVResources() {
+      try {
+        const pdfsRef = storage.ref("resources/pdfs");
+        const pdfRes = await pdfsRef.list();
+        let pdfs = await Promise.all(pdfRes.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          return { name: item.name, url };
+        }));
+        
+        document.getElementById('tiv-book-list').innerHTML = pdfs.map(p => `<li><a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a></li>`).join('');
+
+      } catch (err) {
+        console.error("Firebase Storage Error: ", err);
+        document.getElementById('tiv-book-list').innerHTML = "<li>Error loading from Firebase</li>";
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadTIVResources);
+  </script>
+</body>
+</html>

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiruppugazh Anbargal - Centenary Celebration</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <style>
+    /* Premium Page Specific Styles */
+    .hero-centenary {
+      background: linear-gradient(135deg, #e8640c 0%, #f39c12 100%);
+      color: white;
+      padding: 4rem 2rem;
+      border-radius: 12px;
+      text-align: center;
+      margin-bottom: 3rem;
+      box-shadow: 0 10px 30px rgba(232, 100, 12, 0.2);
+    }
+    .hero-centenary h1 {
+      color: white;
+      font-size: 3rem;
+      font-family: 'Tillana', cursive;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+      margin-bottom: 3rem;
+    }
+    .stat-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border-top: 4px solid var(--primary-color);
+    }
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--primary-color);
+      display: block;
+    }
+    .stat-label {
+      font-size: 1.1rem;
+      color: #7f8c8d;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .timeline-container {
+      position: relative;
+      padding: 2rem 0;
+      margin-bottom: 3rem;
+    }
+    .timeline-item {
+      display: flex;
+      gap: 2rem;
+      margin-bottom: 2rem;
+      align-items: center;
+    }
+    .timeline-date {
+      min-width: 150px;
+      font-weight: 800;
+      color: var(--primary-color);
+      text-align: right;
+      font-size: 1.2rem;
+    }
+    .timeline-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+      flex: 1;
+    }
+    .committee-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 4rem;
+    }
+    .committee-card {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .committee-card:hover {
+      transform: translateY(-5px);
+    }
+    .committee-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 100%;
+      background: var(--primary-color);
+    }
+    .committee-title {
+      font-size: 1.4rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .committee-list {
+      list-style: none;
+    }
+    .committee-list li {
+      margin-bottom: 0.8rem;
+      padding-left: 1.5rem;
+      position: relative;
+    }
+    .committee-list li::before {
+      content: "•";
+      color: var(--primary-color);
+      position: absolute;
+      left: 0;
+      font-weight: bold;
+    }
+    .media-section {
+      text-align: center;
+      margin-top: 4rem;
+    }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 3rem;
+      margin-top: 2rem;
+    }
+    .media-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .poster-container {
+      width: 100%;
+      height: 600px; /* Fixed height for perfect alignment */
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      border: 8px solid white;
+      background: white;
+    }
+    .media-caption {
+      margin-top: 1rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+    .banner-full {
+      width: 100%;
+      margin-top: 3rem;
+    }
+    .banner-full img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    @media (max-width: 768px) {
+      .hero-centenary h1 { font-size: 2rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .timeline-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+      .timeline-date { text-align: left; min-width: auto; }
+      .media-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container mt-2">
+    <!-- Hero Section -->
+    <div class="hero-centenary">
+      <h1>Guruji Centenary Celebrations</h1>
+      <p style="font-size: 1.3rem; opacity: 0.9;">Celebrating 100 Golden Years of Devotion and Harmony (1928 - 2013)</p>
+      <div style="margin-top: 2rem; font-style: italic; font-weight: bold;">
+        2026 — 2028
+      </div>
+    </div>
+
+    <!-- Intro Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-number">30+ Cities</span>
+        <span class="stat-label">Participating in India</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-number">15 Cities</span>
+        <span class="stat-label">Participating Overseas</span>
+      </div>
+    </div>
+
+    <!-- Timeline of Major Events -->
+    <div class="card">
+      <h2 class="text-center mb-2">Milestones & Journey</h2>
+      <div class="timeline-container">
+        <div class="timeline-item">
+          <div class="timeline-date">24.05.2025</div>
+          <div class="timeline-content">
+            <strong>Committee Formation</strong>
+            <p>The Guruji Centenary Committee was formally established to oversee all global celebrations.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Sept 2026</div>
+          <div class="timeline-content" style="border-left: 4px solid var(--primary-color);">
+            <strong>Inaugural Function — New Delhi</strong>
+            <p>A grand opening ceremony to mark the beginning of the two-year worldwide celebration.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">2026 - 2028</div>
+          <div class="timeline-content">
+            <strong>Global Celebrations</strong>
+            <p>Events scheduled across 10 major centres in India and 6 key centres overseas throughout the intervening two-year period.</p>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-date">Sept 2028</div>
+          <div class="timeline-content" style="border-left: 4px solid var(--primary-color);">
+            <strong>The Grand Finale</strong>
+            <p>Culmination of the centenary celebrations with a massive gathering to honour Guruji’s legacy.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Committees Grid -->
+    <h2 class="text-center mb-2">Sub-Committees</h2>
+    <div class="committee-grid">
+      <!-- Documentary -->
+      <div class="committee-card">
+        <h3 class="committee-title">🎥 Documentary Committee</h3>
+        <ul class="committee-list">
+          <li>Documentary Film</li>
+          <li>Paddhati Video</li>
+          <li>Official Banner & Poster</li>
+          <li>Inaugural Invite & Brochure</li>
+        </ul>
+      </div>
+
+      <!-- E-Souvenir -->
+      <div class="committee-card">
+        <h3 class="committee-title">📖 E-Souvenir Committee</h3>
+        <ul class="committee-list">
+          <li>Collection of articles on Guruji & Thiruppugazh</li>
+          <li>Blessings from Sringeri & Kanchi Swamigal</li>
+          <li>Launch of E-Book at Inaugural Function</li>
+          <li>Regular Supplements for every major event</li>
+        </ul>
+      </div>
+
+      <!-- Program -->
+      <div class="committee-card">
+        <h3 class="committee-title">📅 Program Committee</h3>
+        <ul class="committee-list">
+          <li>Global Coordination of Dates & Venues</li>
+          <li>Avoiding scheduling overlaps between cities</li>
+          <li>Ensuring Anbargal can attend all major functions</li>
+        </ul>
+      </div>
+
+      <!-- Song List -->
+      <div class="committee-card">
+        <h3 class="committee-title">🎵 Song List Committee</h3>
+        <ul class="committee-list">
+          <li>Comprehensive coverage of all 503 songs</li>
+          <li>Strategic selection for the 8 primary Bhajans</li>
+          <li>Ensuring diverse song sets without major overlaps</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Media Section -->
+    <div class="media-section">
+      <h2>Centenary Media & Visuals</h2>
+      <p>Official assets for the 2026-2028 celebrations.</p>
+      
+      <!-- Row 1: Tamil & Tamil -->
+      <h3 style="margin-top: 3rem; color: #666; font-size: 1.1rem; text-transform: uppercase;">Tamil Content</h3>
+      <div class="media-grid">
+        <div class="media-item">
+          <div class="poster-container">
+            <img src="images/centenary/poster_intro_ta.jpg" alt="Centenary Introduction (Tamil)">
+          </div>
+          <p class="media-caption">Celebration Intro (Tamil)</p>
+        </div>
+        <div class="media-item">
+          <div class="poster-container">
+            <img src="images/centenary/poster_schedule_ta.jpg" alt="Centenary Programme Schedule (Tamil)">
+          </div>
+          <p class="media-caption">Programme Details (Tamil)</p>
+        </div>
+      </div>
+
+      <!-- Row 2: English & English -->
+      <h3 style="margin-top: 4rem; color: #666; font-size: 1.1rem; text-transform: uppercase;">English Content</h3>
+      <div class="media-grid">
+        <div class="media-item">
+          <div class="poster-container">
+            <img src="images/centenary/poster_intro_en.jpg" alt="Centenary Introduction (English)">
+          </div>
+          <p class="media-caption">Celebration Intro (English)</p>
+        </div>
+        <div class="media-item">
+          <div class="poster-container">
+            <img src="images/centenary/poster_schedule_en.jpg" alt="Centenary Programme Schedule (English)">
+          </div>
+          <p class="media-caption">Programme Details (English)</p>
+        </div>
+      </div>
+
+      <!-- Row 3: Logo below -->
+      <div class="banner-full" style="max-width: 600px; margin: 5rem auto 0;">
+        <h3 style="color: var(--primary-color);">Official Centenary Logo</h3>
+        <img src="images/centenary/banner_logo.jpg" alt="Centenary Event Banner Logo" style="margin-top: 1.5rem; border: none; box-shadow: none;">
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/layout.js"></script>
+</body>
+</html>

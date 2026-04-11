@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Thiruppugazh Anbargal</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/admin.css">
+  
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/config.js"></script>
+</head>
+<body>
+  
+  <main class="container">
+    <div class="admin-container">
+      <h1 class="text-center" style="margin-bottom: 2rem;">Admin Dashboard</h1>
+      
+      <!-- Auth Guard Redirect -->
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const auth = window.auth || firebase.auth();
+          auth.onAuthStateChanged(user => {
+            if (!user) {
+              window.location.href = 'login.html';
+            }
+          });
+        });
+      </script>
+
+      <!-- Dashboard View -->
+      <div id="admin-dashboard" style="display: block;">
+        <!-- Title and Logout -->
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+          <h2 id="dashboard-header">Manage Events</h2>
+          <button id="logout-btn" class="btn btn-secondary btn-small">Sign Out</button>
+        </div>
+
+        <div id="manage-events" class="admin-tab-content active">
+          <div id="event-form-container" style="display: none;">
+            <h3 id="form-title">Create New Event</h3>
+            <form id="event-form">
+              <input type="hidden" id="event-id">
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label for="eventName">Event Name *</label>
+                  <input type="text" id="eventName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="eventDateTime">Date & Time *</label>
+                  <input type="datetime-local" id="eventDateTime" class="form-control" required>
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="city">City *</label>
+                <input type="text" id="city" class="form-control" required>
+              </div>
+              
+              <div class="form-group">
+                <label for="venue">Venue *</label>
+                <textarea id="venue" class="form-control" required></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="bhajan">Bhajan</label>
+                <input type="text" id="bhajan" class="form-control">
+              </div>
+
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label for="urlToJoin">URL To Join (Valid URL)</label>
+                  <input type="url" id="urlToJoin" class="form-control" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                  <label for="mediaUrl">Photos & Videos (Valid URL)</label>
+                  <input type="url" id="mediaUrl" class="form-control" placeholder="https://...">
+                </div>
+              </div>
+              
+              <div style="display: flex; gap: 1rem;">
+                <button type="submit" class="btn">Save Event</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelEdit()">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <button id="add-event-btn" class="btn" style="margin-bottom: 2rem;">+ Add New Event</button>
+          
+          <div id="events-list" class="event-list">
+            <p class="text-center">Loading events...</p>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="js/layout.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
