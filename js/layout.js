@@ -95,6 +95,14 @@ function renderDesktopItem(item) {
 
 function generateMobileNav() {
   let html = '<ul class="sidebar-nav">';
+  // Add Upcoming Events as the first item
+  html += `
+    <li class="mobile-nav-cta-wrapper">
+      <a href="#" onclick="toggleSidebar(); toggleEventsSidebar(); event.preventDefault();" class="mobile-nav-cta">
+        📅 UPCOMING EVENTS
+      </a>
+    </li>
+  `;
   navItems.forEach((item, index) => {
     html += renderMobileItem(item, `nav-${index}`);
   });
@@ -159,7 +167,6 @@ function renderLayout() {
     
     <div id="mobile-sidebar">
       <div class="sidebar-header">
-        <a href="#" onclick="toggleSidebar(); toggleEventsSidebar(); event.preventDefault();" style="background:var(--primary-color); color:white; font-weight:bold; margin-bottom:15px; border-radius:4px; display:block; padding:10px; text-decoration:none;">📅 UPCOMING EVENTS</a>
         <span>Menu</span>
         <button class="close-btn" onclick="toggleSidebar()">×</button>
       </div>

@@ -482,6 +482,36 @@ h6 {
     font-size: 0.8rem;
     padding: 8px 15px;
   }
+  
+  /* Hide the floating tab when the sidebar is open to prevent clutter */
+  #mobile-sidebar.open ~ .events-sidebar-tab {
+    display: none !important;
+  }
+}
+
+/* Mobile Nav CTA Styles */
+.mobile-nav-cta-wrapper {
+  background: var(--primary-color) !important;
+  margin: 1rem !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  border-bottom: none !important;
+}
+
+.mobile-nav-cta {
+  color: white !important;
+  text-align: center;
+  padding: 1.2rem !important;
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+  display: block;
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.mobile-nav-cta:hover {
+  background: #d35400 !important;
 }
 
 /* Events Sidebar Tab & Mobile Floating Button */
