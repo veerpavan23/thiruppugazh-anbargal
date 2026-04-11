@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Admin Account - Thiruppugazh Anbargal</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="js/config.js"></script>
+  <style>
+    .auth-container { max-width: 400px; margin: 5rem auto; padding: 2rem; border-radius: 12px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .btn-create { background: var(--secondary-color); color: white; border: none; padding: 10px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: 600; margin-top: 1rem; }
+    .alert { padding: 10px; border-radius: 6px; margin-bottom: 1rem; display: none; }
+    .alert-error { background: #fee2e2; color: #991b1b; }
+    .alert-success { background: #dcfce7; color: #166534; }
+  </style>
+</head>
+<body style="background: var(--bg-color);">
+  <main class="container">
+    <div class="auth-container">
+      <h2 class="text-center" style="margin-bottom: 0.5rem;">Create New Admin</h2>
+      <p class="text-center text-muted" style="margin-bottom: 1.5rem; font-size: 0.9rem;">Setup your new administrative credentials.</p>
+      
+      <div id="message" class="alert"></div>
+      
+      <form id="create-admin-form">
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="email">New Admin Email</label>
+          <input type="email" id="email" class="form-control" required placeholder="your.new.email@example.com">
+        </div>
+        <div class="form-group" style="margin-bottom: 1rem;">
+          <label for="password">Create Password</label>
+          <input type="password" id="password" class="form-control" required placeholder="Minimum 6 characters">
+        </div>
+        <button type="submit" id="submit-btn" class="btn-create">Create Admin & Login</button>
+      </form>
+      
+      <div style="margin-top: 1.5rem; text-align: center; border-top: 1px solid #eee; padding-top: 1rem;">
+        <p style="font-size: 0.8rem; color: #ef4444;"><strong>Security Warning:</strong> Delete this file (<code>create-admin.html</code>) immediately after use.</p>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const auth = window.auth || firebase.auth();
+      const form = document.getElementById('create-admin-form');
+      const message = document.getElementById('message');
+      const submitBtn = document.getElementById('submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+
+        if (password.length < 6) {
+          showMessage('Password must be at least 6 characters.', 'error');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating Account...';
+        hideMessage();
+
+        try {
+          await auth.createUserWithEmailAndPassword(email, password);
+          showMessage('Admiin account created successfully! Redirecting...', 'success');
+          
+          // Small delay before redirect to ensure auth state is persisted
+          setTimeout(() => {
+            window.location.href = 'admin.html';
+          }, 1500);
+        } catch (error) {
+          console.error("Creation error:", error);
+          showMessage('Error creating account: ' + error.message, 'error');
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Admin & Login';
+        }
+      });
+
+      function showMessage(text, type) {
+        message.textContent = text;
+        message.className = 'alert alert-' + type;
+        message.style.display = 'block';
+      }
+
+      function hideMessage() {
+        message.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
