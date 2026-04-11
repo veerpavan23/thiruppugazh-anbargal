@@ -562,20 +562,28 @@ h6 {
 
 .events-sidebar {
   position: fixed;
-  right: -380px;
+  right: 0;
   top: 0;
   width: 380px;
+  max-width: 100%;
   height: 100%;
   background: white;
   z-index: 2002;
   box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
-  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   overflow-y: auto;
   padding: 0;
 }
 
 .events-sidebar.open {
-  right: 0;
+  transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  .events-sidebar {
+    width: 100%;
+  }
 }
 
 .events-sidebar-content {
@@ -687,9 +695,3 @@ h6 {
   display: block;
 }
 
-@media (max-width: 480px) {
-  .events-sidebar {
-    width: 100%;
-    right: -100%;
-  }
-}
