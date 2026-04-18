@@ -227,9 +227,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../images/murugan_banner_bg.png') no-repeat center top / cover;
+  background: url('../images/murugan_banner_bg.png') no-repeat center / 100% 100%;
   opacity: 0.65;
-  /* Increased visibility for the multi-pose triptych background */
+  /* Precisely fitted banner strip background */
   z-index: 0;
 }
 
