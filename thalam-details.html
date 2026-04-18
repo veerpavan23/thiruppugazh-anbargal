@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiruppugazh Anbargal - Thaalam Details</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <style>
+        .list-container { margin-bottom: 25px; }
+        .list-container li { margin-bottom: 8px; font-size: 1.1em; }
+    </style>
+    <!-- Firebase v8 from CDN -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+</head>
+<body>
+    <main class="container mt-2">
+        <div class="card">
+            <h2 class="text-center mb-2">Thaalam Details</h2>
+            
+            <div class="list-container">
+                <ul id="thalam-list">
+                    <div class="loader-container">
+                        <div class="loader"></div>
+                    </div>
+                </ul>
+            </div>
+        </div>
+    </main>
+    
+    <script src="js/layout.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
+            projectId: "thiruppugazhanbargal-515e8",
+            storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
+        };
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const storage = firebase.storage();
+
+        async function loadThalamDetails() {
+            const listElement = document.getElementById('thalam-list');
+            try {
+                const thalamRef = storage.ref("thalamdetails");
+                const res = await thalamRef.listAll();
+                
+                if (res.items.length === 0) {
+                    listElement.innerHTML = "<li>No details found in 'thalamdetails' folder.</li>";
+                    return;
+                }
+
+                let items = await Promise.all(res.items.map(async (item) => {
+                    const url = await item.getDownloadURL();
+                    return { name: item.name, url };
+                }));
+
+                items.sort((a, b) => a.name.localeCompare(b.name));
+
+                listElement.innerHTML = items.map(p => `
+                    <li><a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a></li>
+                `).join('');
+            } catch (err) {
+                console.error("Firebase Storage Error: ", err);
+                listElement.innerHTML = "<li>Error loading from Firebase</li>";
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', loadThalamDetails);
+    </script>
+</body>
+</html>

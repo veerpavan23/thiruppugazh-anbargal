@@ -36,7 +36,7 @@ const navItems = [
       { text: "All Songs with Meaning by NR", link: "meaning-nr.html" },
       { text: "All Songs with Meaning by CRK", link: "meaning-crk.html" },
       { text: "Articles", link: "articles.html" },
-      { text: "Thaalam Details", link: "pdf/Thaalam details_0001.pdf", target: "_blank" },
+      { text: "Thaalam Details", link: "thalam-details.html" },
       { text: "Souveneirs", link: "souveneirs.html" },
       { text: "Anbargal Corner", link: "anbargal-corner.html" }
     ]
