@@ -226,9 +226,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../images/murugan_banner_bg.png') no-repeat center top / cover;
-  opacity: 0.55;
-  /* Increased transparency for the new fine art background */
+  background: url('../images/murugan_banner_bg.png') no-repeat center center / cover;
+  opacity: 0.65;
+  /* Increased visibility for the multi-pose triptych background */
   z-index: 0;
 }
 
