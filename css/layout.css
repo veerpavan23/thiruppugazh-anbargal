@@ -96,7 +96,7 @@
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: #fff9f0;
+  background-color: rgba(232, 100, 12, 0.08); /* Slight transparent orange */
   text-decoration: none;
   color: var(--primary-color);
 }
@@ -136,7 +136,7 @@
 
 .dropdown:hover .dropbtn,
 .dropbtn:focus {
-  background-color: #fff9f0;
+  background-color: rgba(232, 100, 12, 0.08); /* Slight transparent orange */
   color: var(--primary-color);
 }
 
