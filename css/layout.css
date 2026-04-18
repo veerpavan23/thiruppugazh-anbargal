@@ -226,9 +226,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../images/banner_bg.png') no-repeat center top / cover;
-  opacity: 0.45;
-  /* Increased visibility as requested */
+  background: url('../images/murugan_banner_bg.png') no-repeat center top / cover;
+  opacity: 0.55;
+  /* Increased transparency for the new fine art background */
   z-index: 0;
 }
 
@@ -276,7 +276,7 @@
   font-family: 'Tillana', cursive;
   font-weight: 700;
   letter-spacing: 1px;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15), 0 0 10px rgba(255, 255, 255, 0.5);
 }
 
 h1,
