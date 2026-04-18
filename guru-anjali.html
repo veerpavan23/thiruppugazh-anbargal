@@ -48,11 +48,17 @@
           return;
         }
 
-        // Sort items by name to keep them in order (roughly by year if named correctly)
-        const items = res.items.sort((a, b) => a.name.localeCompare(b.name));
+        // Fetch all download URLs and file metadata
+        const fileData = await Promise.all(res.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          return { name: item.name, url };
+        }));
+
+        // Sort items by name
+        fileData.sort((a, b) => a.name.localeCompare(b.name));
         
         container.innerHTML = `<ul>
-          ${items.map(p => `
+          ${fileData.map(p => `
             <li>
               <a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a>
             </li>
