@@ -208,8 +208,8 @@
 .banner-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start; /* Aligned to top for perfect portrait symmetry from the top */
-  padding: 1.2rem 2rem; /* Reduced padding from 1.5rem to 1.2rem (approx 10-20% overall size reduction) */
+  align-items: flex-end; /* Align all items to the bottom horizon */
+  padding: 1rem 1.5rem;
   background-color: #ffffff;
   border-bottom: 3px solid var(--primary-color);
   flex-wrap: wrap;
@@ -217,6 +217,7 @@
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   position: relative;
   overflow: hidden;
+  gap: 10px;
 }
 
 .banner-section::before {
@@ -226,7 +227,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../images/murugan_banner_bg.png') no-repeat center center / cover;
+  background: url('../images/murugan_banner_bg.png') no-repeat center top / cover;
   opacity: 0.65;
   /* Increased visibility for the multi-pose triptych background */
   z-index: 0;
@@ -237,12 +238,17 @@
   margin: 5px;
   position: relative;
   z-index: 1;
-  /* Keep above background */
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* All items centered internally */
   text-align: center;
+}
+
+.banner-item.left, 
+.banner-item.right,
+.banner-item.center {
+  align-self: flex-end; /* All items at the bottom as requested */
+  margin-bottom: 20px;
 }
 
 .banner-item.center {
@@ -262,7 +268,7 @@
 /* Specifically target left and right portrait images only */
 .banner-item.left img, 
 .banner-item.right img {
-  height: 195px !important; /* Increased for better visibility as requested */
+  height: 160px !important; /* Reduced slightly to reveal the background faces */
 }
 
 .banner-item img:hover {
