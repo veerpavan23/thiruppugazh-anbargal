@@ -77,16 +77,16 @@
 }
 
 .nav-link {
-  padding: 1rem 1.2rem;
+  padding: 0.6rem 1rem; /* Slimmed from 1rem */
   color: #444;
   font-weight: 700;
   display: inline-block;
-  min-height: 48px;
+  min-height: 38px; /* Slimmed from 48px */
   border-right: 1px solid #eee;
   transition: all 0.2s ease;
   position: relative;
   text-transform: uppercase;
-  font-size: 0.9rem;
+  font-size: 0.85rem; /* Slightly smaller for slim look */
   letter-spacing: 0.5px;
 }
 
@@ -122,13 +122,13 @@
 .dropbtn {
   background-color: transparent;
   color: #444;
-  padding: 1rem 1.2rem;
-  font-size: 0.9rem;
+  padding: 0.6rem 1rem; /* Slimmed from 1rem */
+  font-size: 0.85rem; /* Slimmed from 0.9rem */
   border: none;
   cursor: pointer;
   font-weight: 700;
   font-family: inherit;
-  min-height: 48px;
+  min-height: 38px; /* Slimmed from 48px */
   text-transform: uppercase;
   letter-spacing: 0.5px;
   transition: all 0.2s ease;
@@ -208,8 +208,9 @@
 .banner-section {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end; /* Align all items to the bottom horizon */
-  padding: 1rem 1.5rem;
+  align-items: flex-start; /* CRITICAL: Anchor everything to the top line */
+  padding: 2.5rem 1.5rem 0.5rem 1.5rem; /* Reduced bottom padding to slim the gap */
+  min-height: 380px;
   background-color: #ffffff;
   border-bottom: 3px solid var(--primary-color);
   flex-wrap: wrap;
@@ -227,9 +228,9 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: url('../images/murugan_banner_bg.png') no-repeat center / 100% 100%;
+  background: url('../images/murugan_banner_bg.png') no-repeat center center / cover;
   opacity: 0.65;
-  /* Precisely fitted banner strip background */
+  /* Precision Integrated Solution: Single seamless artwork scaled within the image for zero cropping. */
   z-index: 0;
 }
 
@@ -265,10 +266,28 @@
   transition: transform 0.3s ease;
 }
 
+.banner-item.left, 
+.banner-item.right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 0;
+  padding-top: 30px; /* Fixed anchor point from the top for symmetry */
+  flex: 0 0 180px;
+  align-self: flex-start; /* Lock both to the top edge */
+}
+
 /* Specifically target left and right portrait images only */
 .banner-item.left img, 
 .banner-item.right img {
-  height: 160px !important; /* Reduced slightly to reveal the background faces */
+  height: 210px !important; /* Made "little big" as requested */
+  width: 160px; /* Fixed width for uniform look */
+  object-fit: cover; /* Professional crop */
+  object-position: top center;
+  border: 4px solid white;
+  margin: 0; 
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
 .banner-item img:hover {
@@ -282,7 +301,9 @@
   font-family: 'Tillana', cursive;
   font-weight: 700;
   letter-spacing: 1px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15), 0 0 10px rgba(255, 255, 255, 0.5);
+  /* Black border/stroke for maximum visibility */
+  -webkit-text-stroke: 1px #000;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px rgba(255, 255, 255, 0.4);
 }
 
 h1,
@@ -298,12 +319,10 @@ h6 {
 .banner-item p {
   font-size: 0.95rem;
   margin-top: 10px;
-  color: #3e2723;
+  font-weight: 700; /* Bold as requested */
+  color: #333;
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.8), 0 0 2px rgba(255, 255, 255, 1);
   line-height: 1.4;
-  font-weight: 800;
-  /* Extra bold image text as requested */
-  text-shadow: 0 0 10px #ffffff;
-  /* Subtle white glow to pop from background */
 }
 
 @media (max-width: 768px) {

@@ -150,12 +150,12 @@ function renderLayout() {
       
       <div class="banner-section">
          <div class="banner-item left">
-           <img src="images/banner2.png" alt="Sri A.S. Raghavan Banner">
+           <img src="images/guruji_official_final.jpg" alt="Sri A.S. Raghavan Banner">
            <p>உலகமெங்கும் திருப்புகழ் பரவசெய்த குருஜி ஏ.எஸ் ராகவன் <br/> (1928-2013)</p>
          </div>
          <div class="banner-item center">
-           <img src="images/logo.jpg" alt="Thiruppugazh Anbargal Logo" style="height: 80px; width: auto; margin-bottom: 10px; box-shadow: none; border: none;">
            <h1 class="banner-title">Thiruppugazh Anbargal</h1>
+           <img src="images/logo.jpg" alt="Thiruppugazh Anbargal Logo" style="height: 80px; width: auto; margin-top: 10px; margin-bottom: 5px; box-shadow: none; border: none;">
          </div>
          <div class="banner-item right">
            <img src="images/banner1.png" alt="Arunagirinathar Banner">
