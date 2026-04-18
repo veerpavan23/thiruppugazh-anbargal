@@ -41,7 +41,7 @@ const navItems = [
       { text: "Anbargal Corner", link: "anbargal-corner.html" }
     ]
   },
-  { text: "Song TIV Lists With Theme", link: "pdf/Song lists with theme_0001.pdf", target: "_blank" },
+  { text: "Song TIV Lists With Theme", link: "songtivlist.html" },
   { text: "Manage Events", link: "admin.html", isAdmin: true },
   { text: "User Feedback", link: "feedback.html", isAdmin: true }
 ];
@@ -182,7 +182,9 @@ function renderLayout() {
         <button class="events-close-btn" onclick="toggleEventsSidebar()">×</button>
       </div>
       <div id="events-sidebar-content" class="events-sidebar-content">
-        <p>Loading events...</p>
+        <div class="loader-container">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
     <div class="sidebar-overlay-events" onclick="toggleEventsSidebar()"></div>

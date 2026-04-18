@@ -1,25 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="">
   <title>Viruthams Sung By Guruji - Thiruppugazh Anbargal</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/layout.css">
   <style>
-    .audio-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
-    .audio-card h3 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.1rem; text-transform: capitalize; }
+    .audio-card {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      padding: 15px;
+      margin-bottom: 20px;
+      border-left: 5px solid var(--primary-color);
+    }
+
+    .audio-card h3 {
+      margin-bottom: 10px;
+      color: var(--primary-color);
+      font-size: 1.1rem;
+      text-transform: capitalize;
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
   <script src="js/config.js"></script>
 </head>
+
 <body>
   <main class="container mt-2">
     <div class="card">
       <h2 class="text-center mb-2">Viruthams Sung By Guruji</h2>
       <div id="audio-list" class="grid grid-2">
-        <p class="text-center" style="grid-column: 1/-1;">Loading audio recordings...</p>
+        <div class="loader-container" style="grid-column: 1/-1;">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
   </main>
@@ -97,19 +114,19 @@
           let title = rawName;
           let searchName = rawName.toLowerCase();
           let sortId = item.name; // Keep full filename for sorting
-          
+
           // Apply mappings
           for (const mapping of nameMappings) {
             const match = mapping.keys.every(key => searchName.includes(key.toLowerCase()));
             if (match) {
               title = mapping.title;
               // Custom sort override for specific user requirements (003A as #3, 003 as #4)
-              if (mapping.keys.includes("003a")) sortId = "003_0"; 
+              if (mapping.keys.includes("003a")) sortId = "003_0";
               if (mapping.keys.includes("003") && mapping.keys.includes("umbar")) sortId = "003_1";
               break;
             }
           }
-          
+
           return { title, url, sortId };
         }));
 
@@ -132,4 +149,5 @@
     document.addEventListener('DOMContentLoaded', loadAudio);
   </script>
 </body>
+
 </html>

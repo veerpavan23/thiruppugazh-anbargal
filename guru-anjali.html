@@ -12,13 +12,13 @@
 </head>
 <body>
   <main class="container mt-2">
-    <div class="card" style="text-align: center;">
-      <h2 class="mb-2">Guru Anjali</h2>
+    <div class="card">
+      <h2 class="text-center mb-2">Guru Anjali</h2>
       
-      <div style="display:flex; flex-direction:column; gap:15px; font-size: 1.1em; align-items: center; justify-content:center;">
-        <a id="pdf1" href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">1. Guru Anjali 1998 (Loading...)</a>
-        <a id="pdf2" href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">2. Pavazha Vizha of guruji 2003 (Loading...)</a>
-        <a id="pdf3" href="#" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">3. Guruji Ninaivu Poongotthu 2018 (Loading...)</a>
+      <div id="pdf-list" style="display:flex; flex-direction:column; gap:15px; font-size: 1.1em; align-items: flex-start; justify-content: flex-start;">
+        <div class="loader-container">
+          <div class="loader"></div>
+        </div>
       </div>
 
     </div>
@@ -37,27 +37,30 @@
     const storage = firebase.storage();
 
     async function loadPdfs() {
-      const pdfs = [
-        { id: "pdf1", path: "pdf/1. Guru Anjali 1998.pdf", text: "1. Guru Anjali 1998" },
-        { id: "pdf2", path: "pdf/2. Pavazha Vizha of guruji 2003.pdf", text: "2. Pavazha Vizha of guruji 2003" },
-        { id: "pdf3", path: "pdf/3. Guruji Ninaivu Poongotthu 2018.pdf", text: "3. Guruji Ninaivu Poongotthu 2018" }
-      ];
-
-      for (const pdf of pdfs) {
-        const el = document.getElementById(pdf.id);
-        try {
-          const url = await storage.ref(pdf.path).getDownloadURL();
-          el.href = url;
-          el.innerText = pdf.text;
-          el.className = "btn"; // Make it look active/orange
-        } catch (e) {
-          console.error("PDF not in Firebase Storage locally", e);
-          el.innerText = pdf.text + " (Unavailable)";
-          el.style.backgroundColor = "red";
-          
-          // Fallback to local path in case the user later provides the folder!
-          el.href = "./" + pdf.path;
+      const container = document.getElementById("pdf-list");
+      
+      try {
+        const listRef = storage.ref('GuruAnjali');
+        const res = await listRef.listAll();
+        
+        if (res.items.length === 0) {
+          container.innerHTML = "<p>No files found in GuruAnjali folder.</p>";
+          return;
         }
+
+        // Sort items by name to keep them in order (roughly by year if named correctly)
+        const items = res.items.sort((a, b) => a.name.localeCompare(b.name));
+        
+        container.innerHTML = `<ul>
+          ${items.map(p => `
+            <li>
+              <a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a>
+            </li>
+          `).join('')}
+        </ul>`;
+      } catch (e) {
+        console.error("Error listing GuruAnjali folder", e);
+        container.innerHTML = "<p style='color:red;'>Error loading files. Please check Firebase Storage rules and ensure 'GuruAnjali' folder exists.</p>";
       }
     }
     document.addEventListener("DOMContentLoaded", loadPdfs);

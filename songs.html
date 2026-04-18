@@ -141,7 +141,13 @@
                         </tr>
                     </thead>
                     <tbody id="songs-body">
-                        <tr><td colspan="9" class="loading-overlay">✨ Loading spiritual collection...</td></tr>
+                        <tr>
+                            <td colspan="9">
+                                <div class="loader-container">
+                                    <div class="loader"></div>
+                                </div>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -210,13 +216,17 @@
                 html += `
                     <tr class="${isSelected ? 'selected' : ''}">
                         <td><input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleRow(${song.newNumber}, this)"></td>
-                        <td><a href="song.html?id=${song.newNumber}" class="clickable-link">${song.songName || ''}</a></td>
-                        <td><a href="song.html?id=${song.newNumber}" class="clickable-link">${song.englishName || ''}</a></td>
+                        <td>
+                            <a href="${song.songUrl || '#'}" target="_blank" rel="noopener noreferrer" class="clickable-link">${song.songName || ''}</a>
+                        </td>
+                        <td>
+                            <a href="${song.songUrl || '#'}" target="_blank" rel="noopener noreferrer" class="clickable-link">${song.englishName || ''}</a>
+                        </td>
                         <td>${song.newNumber || ''}</td>
                         <td>${song.oldNumber || ''}</td>
                         <td>${song.ragam || ''}</td>
                         <td>
-                            ${song.tamilMeaningUrl ? `<a href="${song.tamilMeaningUrl}" target="_blank" class="clickable-link">${song.tamilMeaning || 'View Meaning'}</a>` : (song.tamilMeaning || '-')}
+                            ${song.tamilMeaningUrl ? `<a href="${song.tamilMeaningUrl}" target="_blank" rel="noopener noreferrer" class="clickable-link">${song.tamilMeaning || 'View Meaning'}</a>` : (song.tamilMeaning || '-')}
                         </td>
                         <td title="${song.meaning || ''}">${song.meaning ? (song.meaning.length > 30 ? song.meaning.substring(0, 30) + '...' : song.meaning) : '-'}</td>
                         <td>${song.classify1 || ''}</td>
