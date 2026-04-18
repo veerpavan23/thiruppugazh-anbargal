@@ -168,7 +168,8 @@
 }
 
 .dropdown-content a:hover {
-  background-color: #f1f1f1;
+  background-color: rgba(232, 100, 12, 0.08); /* Sleek transparent orange */
+  color: var(--primary-color);
 }
 
 .dropdown:hover .dropdown-content {
