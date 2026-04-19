@@ -193,9 +193,6 @@ function renderLayout() {
   const footerHtml = `
     <footer class="app-footer">
       <p>&copy; ${new Date().getFullYear()} Thiruppugazh Anbargal. Built for the community.</p>
-      <div id="footer-admin-link" style="margin-top: 10px; font-size: 0.8rem; opacity: 0.6;">
-        <a href="login.html" style="color: inherit; text-decoration: none;">Admin Login</a>
-      </div>
     </footer>
   `;
 
@@ -257,12 +254,6 @@ function initAdminVisibility() {
       el.style.display = user ? 'block' : 'none';
       if (user && el.tagName === 'A') el.style.display = 'inline-block';
     });
-    
-    // Toggle footer login link
-    const footerLink = document.getElementById('footer-admin-link');
-    if (footerLink) {
-      footerLink.style.display = user ? 'none' : 'block';
-    }
   });
 }
 
