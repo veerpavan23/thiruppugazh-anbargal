@@ -74,20 +74,21 @@
   top: 0;
   z-index: 1000;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  margin-bottom: 0; /* Remove dead space below tabs */
 }
 
 .nav-link {
-  padding: 0.6rem 1rem; /* Slimmed from 1rem */
+  padding: 0.4rem 0.8rem; /* Extra Slim from 0.6rem */
   color: #444;
   font-weight: 700;
   display: inline-block;
-  min-height: 38px; /* Slimmed from 48px */
+  min-height: 32px; /* Extra Slim from 38px */
   border-right: 1px solid #eee;
   transition: all 0.2s ease;
   position: relative;
   text-transform: uppercase;
-  font-size: 0.85rem; /* Slightly smaller for slim look */
-  letter-spacing: 0.5px;
+  font-size: 0.8rem; /* Extra Slim from 0.85rem */
+  letter-spacing: 0.3px;
 }
 
 .nav-link:last-child {
@@ -122,15 +123,15 @@
 .dropbtn {
   background-color: transparent;
   color: #444;
-  padding: 0.6rem 1rem; /* Slimmed from 1rem */
-  font-size: 0.85rem; /* Slimmed from 0.9rem */
+  padding: 0.4rem 0.8rem; /* Extra Slim from 0.6rem */
+  font-size: 0.8rem; /* Extra Slim from 0.85rem */
   border: none;
   cursor: pointer;
   font-weight: 700;
   font-family: inherit;
-  min-height: 38px; /* Slimmed from 48px */
+  min-height: 32px; /* Extra Slim from 38px */
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   transition: all 0.2s ease;
 }
 
@@ -209,8 +210,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start; /* CRITICAL: Anchor everything to the top line */
-  padding: 2.5rem 1.5rem 0.5rem 1.5rem; /* Reduced bottom padding to slim the gap */
-  min-height: 380px;
+  padding: 3.5rem 1.5rem 0px 1.5rem; /* Zero bottom padding, increased top padding for grand feel */
+  min-height: 420px; /* Increased from 380px for a more expansive look */
   background-color: #ffffff;
   border-bottom: 3px solid var(--primary-color);
   flex-wrap: wrap;
@@ -273,7 +274,7 @@
   align-items: center;
   justify-content: flex-start;
   margin-top: 0;
-  padding-top: 30px; /* Fixed anchor point from the top for symmetry */
+  padding-top: 20px; /* Adjusted anchor point for larger 420px banner */
   flex: 0 0 180px;
   align-self: flex-start; /* Lock both to the top edge */
 }
