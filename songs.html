@@ -56,21 +56,49 @@
         .songs-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.9rem;
+            font-size: 0.82rem;
+            table-layout: fixed;
         }
         .songs-table th, .songs-table td {
             border: 1px solid #eee;
-            padding: 12px;
+            padding: 8px 6px;
             text-align: left;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
         .songs-table th {
-            background-color: #f8f9fa;
-            color: #555;
+            background-color: var(--primary-color);
+            color: white;
             font-weight: 700;
             position: sticky;
             top: 0;
             z-index: 10;
+            white-space: nowrap;
         }
+        /* Column widths */
+        .songs-table th:nth-child(1),
+        .songs-table td:nth-child(1) { width: 30px; text-align: center; }  /* checkbox */
+        .songs-table th:nth-child(2),
+        .songs-table td:nth-child(2) { width: 11%; }  /* Song Name */
+        .songs-table th:nth-child(3),
+        .songs-table td:nth-child(3) { width: 9%; }   /* English Name */
+        .songs-table th:nth-child(4),
+        .songs-table td:nth-child(4) { width: 3%; text-align: center; }  /* N. */
+        .songs-table th:nth-child(5),
+        .songs-table td:nth-child(5) { width: 3%; text-align: center; }  /* O. */
+        .songs-table th:nth-child(6),
+        .songs-table td:nth-child(6) { width: 10%; }  /* Ragam */
+        .songs-table th:nth-child(7),
+        .songs-table td:nth-child(7) { width: 16%; }  /* Tamil Meaning */
+        .songs-table th:nth-child(8),
+        .songs-table td:nth-child(8) { width: 14%; }  /* Meaning */
+        .songs-table th:nth-child(9),
+        .songs-table td:nth-child(9) { width: 9%; }   /* Classify 1 */
+        .songs-table th:nth-child(10),
+        .songs-table td:nth-child(10) { width: 9%; }  /* Classify 2 */
+        .songs-table th:nth-child(11),
+        .songs-table td:nth-child(11) { width: 9%; }  /* Classify 3 */
+
         .songs-table tr:hover { background-color: #fff9f0; }
         .songs-table tr.selected { background-color: #fff1e6; }
         
@@ -89,6 +117,8 @@
         
         @media (max-width: 768px) {
             .filter-section { flex-direction: column; align-items: stretch; }
+            .songs-table { table-layout: auto; font-size: 0.75rem; }
+            .songs-table th, .songs-table td { padding: 6px 4px; }
         }
     </style>
 </head>
@@ -138,11 +168,13 @@
                             <th>Tamil Meaning</th>
                             <th>Meaning</th>
                             <th>Classify 1</th>
+                            <th>Classify 2</th>
+                            <th>Classify 3</th>
                         </tr>
                     </thead>
                     <tbody id="songs-body">
                         <tr>
-                            <td colspan="9">
+                            <td colspan="11">
                                 <div class="loader-container">
                                     <div class="loader"></div>
                                 </div>
@@ -200,13 +232,13 @@
                 renderTable();
             } catch (err) {
                 console.error("Error fetching songs:", err);
-                tableBody.innerHTML = `<tr><td colspan="9" style="color:red; text-align:center; padding: 2rem;">Error loading collection. Please check your connection.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="11" style="color:red; text-align:center; padding: 2rem;">Error loading collection. Please check your connection.</td></tr>`;
             }
         }
 
         function renderTable() {
             if (filteredSongs.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="9" style="text-align:center; padding: 2rem;">No songs found matching your search.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="11" style="text-align:center; padding: 2rem;">No songs found matching your search.</td></tr>`;
                 return;
             }
 
@@ -230,6 +262,8 @@
                         </td>
                         <td title="${song.meaning || ''}">${song.meaning ? (song.meaning.length > 30 ? song.meaning.substring(0, 30) + '...' : song.meaning) : '-'}</td>
                         <td>${song.classify1 || ''}</td>
+                        <td>${song.classify2 || ''}</td>
+                        <td>${song.classify3 || ''}</td>
                     </tr>
                 `;
             });
@@ -281,30 +315,58 @@
         }
 
         function exportToExcel() {
-            const selectedData = allSongs.filter(s => selectedNumbers.has(s.newNumber)).map(s => ({
-                'Song Name': s.songName,
-                'English Name': s.englishName,
-                'New Number': s.newNumber,
-                'Old Number': s.oldNumber,
-                'Ragam': s.ragam,
-                'Thalam': s.thalam,
-                'Tamil Meaning': s.tamilMeaning,
-                'Meaning': s.meaning,
-                'Classify 1': s.classify1,
-                'Classify 2': s.classify2,
-                'Classify 3': s.classify3
-            }));
+            const selected = allSongs.filter(s => selectedNumbers.has(s.newNumber));
+            const headers = ['Song Name', 'English Name', 'New Number', 'Old Number', 'Ragam', 'Thalam', 'Tamil Meaning', 'Meaning', 'Classify 1', 'Classify 2', 'Classify 3'];
 
-            const worksheet = XLSX.utils.json_to_sheet(selectedData);
-            const workbook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(workbook, worksheet, "Selected Songs");
-            
+            const worksheet = XLSX.utils.aoa_to_sheet([headers]);
+
+            // Helper: create a HYPERLINK formula cell (shows as blue underlined in Excel)
+            function linkCell(url, text) {
+                if (url && text) {
+                    return { t: 's', f: 'HYPERLINK("' + url.replace(/"/g, '""') + '","' + String(text).replace(/"/g, '""') + '")' };
+                }
+                return { v: text || '', t: 's' };
+            }
+
+            selected.forEach((s, rowIdx) => {
+                const row = rowIdx + 1;
+
+                // Song Name & English Name - HYPERLINK formula (blue + underline in Excel)
+                worksheet[XLSX.utils.encode_cell({r: row, c: 0})] = linkCell(s.songUrl, s.songName);
+                worksheet[XLSX.utils.encode_cell({r: row, c: 1})] = linkCell(s.songUrl, s.englishName);
+
+                // Plain text columns
+                worksheet[XLSX.utils.encode_cell({r: row, c: 2})] = { v: s.newNumber || '', t: 's' };
+                worksheet[XLSX.utils.encode_cell({r: row, c: 3})] = { v: s.oldNumber || '', t: 's' };
+                worksheet[XLSX.utils.encode_cell({r: row, c: 4})] = { v: s.ragam || '', t: 's' };
+                worksheet[XLSX.utils.encode_cell({r: row, c: 5})] = { v: s.thalam || '', t: 's' };
+
+                // Tamil Meaning - HYPERLINK formula
+                worksheet[XLSX.utils.encode_cell({r: row, c: 6})] = linkCell(s.tamilMeaningUrl, s.tamilMeaning);
+
+                // Remaining plain text columns
+                worksheet[XLSX.utils.encode_cell({r: row, c: 7})] = { v: s.meaning || '', t: 's' };
+                worksheet[XLSX.utils.encode_cell({r: row, c: 8})] = { v: s.classify1 || '', t: 's' };
+                worksheet[XLSX.utils.encode_cell({r: row, c: 9})] = { v: s.classify2 || '', t: 's' };
+                worksheet[XLSX.utils.encode_cell({r: row, c: 10})] = { v: s.classify3 || '', t: 's' };
+            });
+
+            // Set the range
+            worksheet['!ref'] = XLSX.utils.encode_range({s: {r:0, c:0}, e: {r: selected.length, c: headers.length - 1}});
+
             // Auto-width columns
-            const colWidths = Object.keys(selectedData[0]).map(key => ({
-                wch: Math.max(key.length, ...selectedData.map(row => String(row[key]).length)) + 2
-            }));
+            const colWidths = headers.map((h, i) => {
+                let maxLen = h.length;
+                selected.forEach(s => {
+                    const vals = [s.songName, s.englishName, s.newNumber, s.oldNumber, s.ragam, s.thalam, s.tamilMeaning, s.meaning, s.classify1, s.classify2, s.classify3];
+                    maxLen = Math.max(maxLen, String(vals[i] || '').length);
+                });
+                return { wch: Math.min(maxLen + 2, 50) };
+            });
             worksheet['!cols'] = colWidths;
 
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Selected Songs");
             XLSX.writeFile(workbook, `Thiruppugazh_Export_${new Date().toISOString().slice(0,10)}.xlsx`);
         }
 

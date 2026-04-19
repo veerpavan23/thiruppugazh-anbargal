@@ -6,22 +6,52 @@
   <title>Thiruppugazh Anbargal - Souveneirs</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/layout.css">
+  <style>
+    .pdf-list { display: flex; flex-direction: column; gap: 12px; font-size: 1.1em; line-height: 1.6; padding-left: 20px; }
+    .pdf-list a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
+    .pdf-list a:hover { text-decoration: underline; }
+  </style>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+  <script src="js/config.js"></script>
 </head>
 <body>
   <main class="container mt-2">
     <div class="card">
       <h2 class="text-center mb-2">Souveneirs</h2>
-      <div style="display:flex; flex-direction:column; gap:10px; font-size: 1.1em; line-height:1.6; padding-left:20px;">
-        <a href="./pdf/1975 DELHI ARUNAGIRINATHAR 6th CENTENARY.pdf" target="_blank" rel="noopener noreferrer">1975 DELHI ARUNAGIRINATHAR 6th CENTENARY.pdf</a>
-        <a href="./pdf/1975 KARNATAKA ARUNAGIRINATHAR 6th CENTENARY.pdf" target="_blank" rel="noopener noreferrer">1975 KARNATAKA ARUNAGIRINATHAR 6th CENTENARY.pdf</a>
-        <a href="./pdf/1983 DELHI VELLI VIZHA.pdf" target="_blank" rel="noopener noreferrer">1983 DELHI VELLI VIZHA.pdf</a>
-        <a href="./pdf/1988 KARNATAKA THIRUPPUGAZH KARUVOOLAM.pdf" target="_blank" rel="noopener noreferrer">1988 KARNATAKA THIRUPPUGAZH KARUVOOLAM.pdf</a>
-        <a href="./pdf/1994 KARNATAKA SILVER JUBILEE.pdf" target="_blank" rel="noopener noreferrer">1994 KARNATAKA SILVER JUBILEE.pdf</a>
-        <a href="./pdf/1997 MUMBAI VELLI VIZHA THIRUPPUGAZH OVIYAM.pdf" target="_blank" rel="noopener noreferrer">1997 MUMBAI VELLI VIZHA THIRUPPUGAZH OVIYAM.pdf</a>
-        <a href="./pdf/1998 CHENNAI 40YRS THIRUVIZHA.pdf" target="_blank" rel="noopener noreferrer">1998 CHENNAI 40YRS THIRUVIZHA.pdf</a>
+      <div id="pdf-list" class="pdf-list">
+        <div class="loader-container">
+          <div class="loader"></div>
+        </div>
       </div>
     </div>
   </main>
   <script src="js/layout.js"></script>
+  <script>
+    async function loadSouveneirs() {
+      const container = document.getElementById('pdf-list');
+      try {
+        const storage = firebase.storage();
+        const ref = storage.ref("souveneirs");
+        const res = await ref.list();
+        if (res.items.length === 0) {
+          container.innerHTML = '<p class="text-center">No souveneirs found.</p>';
+          return;
+        }
+        const items = await Promise.all(res.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          return { name: item.name, url };
+        }));
+        items.sort((a, b) => a.name.localeCompare(b.name));
+        container.innerHTML = items.map(item => `
+          <a href="${item.url}" target="_blank" rel="noopener noreferrer">${item.name}</a>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-center" style="color: red;">Error loading souveneirs.</p>';
+      }
+    }
+    document.addEventListener('DOMContentLoaded', loadSouveneirs);
+  </script>
 </body>
 </html>

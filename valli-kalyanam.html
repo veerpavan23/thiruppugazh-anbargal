@@ -41,9 +41,55 @@
         const audioRef = storage.ref("valli-kalyanam");
         const audioRes = await audioRef.list();
         if (audioRes.items.length > 0) {
+          const nameMap = {
+            "01GajananamViruthamNattai": "1.Gajananam Virutham-Nattai",
+            "03AnthamViruthamSaveri": "2.Antham Virutham-Saveri",
+            "04ThiruvadiyumViruthamMohanamMurthiSir": "3.Thiruvadiyum Virutham-Mohanam",
+            "05SenKelViruthamDarbariKanadaManiSir": "4.SenKel Virutham-Darbari Kanada",
+            "06AmararSigamaniyeViruthamHamsananthiRamaniSir": "5.Amarar Sigamaniye Virutham-Hamsananthi",
+            "07VallikkuSivaranjani": "6.Vallikku-Sivaranjani",
+            "08VelMurugaManolayam": "7.Vel Muruga-Manolayam",
+            "09ArimugamMuruganAluthariyaArumugamum": "8.Arimugam Murugan",
+            "10MalaiMatralThilang": "9.MalaiMatral-Thilang",
+            "11MalaiMatral": "10.Malai Matral",
+            "12UnjalAduthal": "11.Unjal Aduthal",
+            "13Kannunjal": "12.Kannunjal",
+            "14VelMurugaVelan": "13.Vel Muruga Velan",
+            "15ValliKalyanaVaibogame": "14.Valli Kalyana Vaibogame",
+            "16Pravaram": "15.Pravaram",
+            "17Pravaram": "16.Pravaram",
+            "18Manthiram": "17.Manthiram",
+            "19Manamenum": "18.Manamenum",
+            "20PumathudaneeAni": "19.PumathudaneeAni",
+            "21MurugaNamavali": "20.MurugaNamavali",
+            "22GurujiSpeaks": "21.Guruji Speaks",
+            "23Mangalyatharanam": "22.Mangalyatharanam",
+            "24PerumViruthamHindolam": "23.Perum Virutham-Hindolam",
+            "25Puraipadum": "24.Puraipadum",
+            "26Olamaraikal": "25.Olamaraikal",
+            "27JayaJaya": "26.JayaJaya",
+            "28Pangayanaar": "27.Pangayanaar",
+            "29PangayaContd": "28.Pangayanar Contd",
+            "30AvagunaViraganai": "29.Avaguna Viraganai",
+            "31AlliVizhiyaalum": "30.AlliVizhiyaalum",
+            "32AgaramuMaakiPurvikalyani": "31.Agaramu Maaki-Purvikalyani",
+            "33SollukakkuViruthamBrinthavanaSarangaSaravanabava": "32.Sollukakku Virutham-BrinthavanaSaranga,Saravanabava",
+            "34VazhthuSinduBhairavi": "33.Vazhthu-SinduBhairavi",
+            "36Archanai 108": "34.Archanai 108",
+            "36Archanai108": "34.Archanai 108",
+            "37Ashtothiram": "35.Ashtothiram",
+            "38ThevaramThunsalil": "36.ThevaramThunsalil",
+            "39KummiThirumagal": "37.Kummi Thirumagal",
+            "40KolattamAlaiKadal": "38.Kolattam Alai Kadal",
+            "41Athlasedanarada": "39.Athlasedanararada",
+            "42Manthirangal": "40.Manthirangal",
+            "43ErumayilMadyamavathi": "41.Erumayil-Madyamavathi",
+            "44ArulRepeatVersion": "42.Arul-Repeat Version"
+          };
           const audioList = await Promise.all(audioRes.items.map(async (item) => {
             const url = await item.getDownloadURL();
-            let name = item.name.split('.')[0].replace(/_/g, " ");
+            let rawName = item.name.split('.')[0].replace(/_/g, " ");
+            let name = nameMap[rawName] || nameMap[rawName.replace(/ /g, "")] || rawName;
             return { name, url };
           }));
           container.innerHTML = audioList.map(item => `

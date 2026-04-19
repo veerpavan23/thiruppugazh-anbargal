@@ -328,19 +328,133 @@ h6 {
 
 @media (max-width: 768px) {
   .banner-section {
-    flex-direction: column;
-    padding: 1rem;
+    flex-direction: column !important;
+    padding: 1rem 0.8rem !important;
+    align-items: center !important;
+    gap: 0.5rem;
+    min-height: auto !important;
+  }
+
+  /* Reorder: center title first, then left portrait, then right portrait */
+  .banner-item.center { order: 1; }
+  .banner-item.left { order: 2; }
+  .banner-item.right { order: 3; }
+
+  /* Portraits side by side on mobile */
+  .banner-section {
+    flex-wrap: wrap !important;
+  }
+
+  .banner-item.center {
+    width: 100%;
+    flex: 0 0 100% !important;
+    margin-bottom: 0.5rem;
+  }
+
+  .banner-item.left,
+  .banner-item.right {
+    flex: 0 0 45% !important;
+    width: 45%;
+    padding-top: 0 !important;
+    align-self: center !important;
+    margin-bottom: 0.5rem;
   }
 
   .banner-title {
-    font-size: 2rem;
-    margin: 10px 0;
+    font-size: 1.5rem !important;
+    line-height: 1.2;
+    -webkit-text-stroke: 0.5px #000;
   }
 
   .banner-item img {
-    height: 135px !important;
-    /* Increased for better visibility (from 108px) */
-    width: auto;
+    height: 120px !important;
+    width: auto !important;
+  }
+
+  .banner-item.left img,
+  .banner-item.right img {
+    height: 140px !important;
+    width: 110px !important;
+  }
+
+  .banner-item p {
+    font-size: 0.7rem !important;
+    max-width: 95%;
+    margin: 4px auto 0;
+    line-height: 1.3;
+  }
+
+  /* Hide the center logo on mobile to save space */
+  .banner-item.center img {
+    height: 50px !important;
+    margin-top: 5px !important;
+    margin-bottom: 2px !important;
+  }
+
+  .desktop-nav {
+    display: none;
+  }
+
+  /* Global mobile card/container fixes */
+  .container {
+    padding: 0 0.5rem !important;
+  }
+
+  .card {
+    padding: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+
+  /* Audio cards - single column on mobile */
+  .grid.grid-2 {
+    grid-template-columns: 1fr !important;
+    gap: 0.8rem !important;
+  }
+
+  .audio-card {
+    padding: 10px !important;
+  }
+
+  .audio-card h3 {
+    font-size: 0.95rem !important;
+  }
+
+  /* Tables responsive */
+  .table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* PDF links list */
+  .pdf-list {
+    padding-left: 10px !important;
+    font-size: 0.95rem !important;
+  }
+
+  /* Page headings */
+  h1 { font-size: 1.6rem !important; }
+  h2 { font-size: 1.4rem !important; }
+  h3 { font-size: 1.2rem !important; }
+
+  /* Filter sections (songs page) */
+  .filter-section {
+    padding: 1rem !important;
+    gap: 10px !important;
+  }
+
+  .search-box, .classify-box {
+    min-width: 100% !important;
+  }
+
+  /* Export button */
+  .export-btn {
+    width: 100%;
+    padding: 12px !important;
+  }
+
+  /* About Guruji page - inline styles override */
+  .grid.grid-2[style*="align-items"] {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -389,42 +503,6 @@ h6 {
 
 .sidebar-overlay.open {
   display: block;
-}
-
-/* Responsive Overrides */
-@media (max-width: 768px) {
-  .banner-section {
-    flex-direction: column !important;
-    padding: 2rem 1rem !important;
-    align-items: center !important;
-    gap: 1.5rem;
-  }
-
-  .banner-item {
-    width: 100%;
-    margin-bottom: 1rem;
-  }
-
-  .banner-title {
-    font-size: 1.8rem !important;
-    line-height: 1.2;
-  }
-
-  .banner-item img {
-    height: 135px !important;
-    /* Increased for better visibility (from 108px) */
-    width: auto;
-  }
-
-  .banner-item p {
-    font-size: 0.85rem !important;
-    max-width: 90%;
-    margin: 8px auto 0;
-  }
-
-  .desktop-nav {
-    display: none;
-  }
 }
 
 .sidebar-header {
