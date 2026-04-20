@@ -210,8 +210,8 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start; /* CRITICAL: Anchor everything to the top line */
-  padding: 4.5rem 1.5rem 0px 1.5rem; /* Increased top padding for grand feel */
-  min-height: 500px; /* Increased from 420px for a more expansive look */
+  padding: 4rem 1.5rem 0px 1.5rem; /* Balanced top padding */
+  min-height: 460px; /* Reduced from 500px to fit second row of tabs on screen */
   background-color: #ffffff;
   border-bottom: 3px solid var(--primary-color);
   width: 100%;
