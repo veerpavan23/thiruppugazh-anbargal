@@ -337,10 +337,12 @@ h6 {
     flex-direction: row !important;
     flex-wrap: wrap !important;
     justify-content: center !important;
-    align-items: flex-start !important; /* Title at top */
-    gap: 0.2rem;
-    min-height: 480px !important; /* Ensure enough height for background visibility */
-    background-position: center bottom !important; 
+    align-items: flex-start !important; /* Forces title to top */
+    gap: 0 !important; /* Remove gap to prevent line wrapping on small screens */
+    min-height: 520px !important; /* Tall enough to clear the center Murugan figure */
+    background-position: center 30% !important; /* Focus on the upper-middle background area */
+    position: relative;
+    overflow: hidden;
   }
 
   /* Reorder: center title first, then left portrait, then right portrait */
@@ -361,13 +363,17 @@ h6 {
 
   .banner-item.left,
   .banner-item.right {
-    flex: 0 0 48% !important;
-    width: 48%;
+    flex: 0 0 42% !important; /* Reduced width to prevent wrapping across most mobile screens */
+    width: 42%;
+    margin: 0 !important;
     padding-top: 0 !important;
-    align-self: flex-end !important; /* Move portraits to the bottom */
-    margin-bottom: 10px;
+    align-self: flex-end !important; /* Anchor precisely to the bottom of the banner */
+    margin-bottom: 20px !important;
     z-index: 2;
   }
+  
+  .banner-item.left { margin-right: 4% !important; }
+  .banner-item.right { margin-left: 4% !important; }
 
   .banner-title {
     font-size: 1.5rem !important;
@@ -382,8 +388,10 @@ h6 {
 
   .banner-item.left img,
   .banner-item.right img {
-    height: 120px !important; /* Slightly smaller to clear more space */
-    width: 100px !important;
+    height: 100px !important; /* Smaller size for mobile to ensure Murugan visibility */
+    width: 80px !important;
+    border: 2px solid white;
+    object-fit: cover;
   }
 
   .banner-item p {
