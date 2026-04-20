@@ -330,15 +330,16 @@ h6 {
 
 @media (max-width: 768px) {
   .banner-section {
-    padding: 1rem 0 !important;
+    padding: 0 !important; /* Managed by navbar padding */
+    margin-top: 60px !important; /* Space for the fixed floating menu */
     width: 100vw !important;
     margin-left: calc(-50vw + 50%);
     display: flex !important;
-    flex-direction: column !important; /* Stack simple title/logo at top */
+    flex-direction: column !important;
     align-items: center !important;
-    justify-content: flex-start !important; /* Start content at top */
-    min-height: 540px !important; /* Fixed height to keep background scale consistent */
-    background-position: center 30% !important; /* Ensure Murugan's face is centered in the gap */
+    justify-content: flex-start !important;
+    min-height: 540px !important;
+    background-position: center 30% !important;
     position: relative !important;
     overflow: hidden !important;
   }
@@ -364,16 +365,20 @@ h6 {
   .banner-item.left,
   .banner-item.right {
     position: absolute !important;
-    bottom: 10px !important;
-    width: 135px !important; /* Fixed width to prevent any overflow or stacking */
-    min-width: 0 !important; /* OVERRIDE base 300px rule */
+    bottom: 0px !important; /* Align to the same bottom line */
+    width: 135px !important;
+    height: 200px !important; /* Consistent container height for alignment */
+    min-width: 0 !important;
     flex: none !important;
     margin: 0 !important;
     padding: 5px !important;
     z-index: 5 !important;
-    background: rgba(255, 255, 255, 0.4); /* Subtle glass effect for contrast */
+    background: rgba(255, 255, 255, 0.4);
     border-radius: 8px;
     backdrop-filter: blur(2px);
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: flex-start !important; /* Aligns content (image) at the top */
   }
 
   .banner-item.left {
@@ -604,11 +609,14 @@ h6 {
   .navbar-top {
     display: flex;
     justify-content: flex-start;
-    position: sticky;
+    position: fixed; /* FLOATER: Stays on top as user scrolls */
     top: 0;
-    z-index: 1000;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 2003; /* High z-index to stay above everything */
     background-color: var(--navbar-bg);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
 
   .events-sidebar-tab {
