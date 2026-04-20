@@ -145,7 +145,9 @@ function renderLayout() {
   const headerHtml = `
     <header class="app-header">
       <div class="navbar-top">
-        <button class="mobile-menu-btn" onclick="toggleSidebar()">☰ Menu</button>
+        <button class="mobile-menu-btn" onclick="toggleSidebar()" style="background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 4px; font-weight: 900; font-size: 1.1rem; margin: 10px; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 1.5rem;">☰</span> MENU
+        </button>
       </div>
       
       <div class="banner-section">
@@ -188,6 +190,9 @@ function renderLayout() {
       </div>
     </div>
     <div class="sidebar-overlay-events" onclick="toggleEventsSidebar()"></div>
+    
+    <!-- Back to Top Button -->
+    <div id="back-to-top" class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
   `;
 
   const footerHtml = `
@@ -198,6 +203,16 @@ function renderLayout() {
 
   document.body.insertAdjacentHTML('afterbegin', headerHtml);
   document.body.insertAdjacentHTML('beforeend', footerHtml);
+
+  // Scroll to Top Logic
+  window.addEventListener('scroll', () => {
+    const btt = document.getElementById('back-to-top');
+    if (window.scrollY > 300) {
+      btt.classList.add('visible');
+    } else {
+      btt.classList.remove('visible');
+    }
+  });
 
   // Load Firebase scripts if they are missing
   ensureFirebaseLoaded(() => {

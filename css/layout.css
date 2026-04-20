@@ -214,6 +214,8 @@
   min-height: 420px; /* Increased from 380px for a more expansive look */
   background-color: #ffffff;
   border-bottom: 3px solid var(--primary-color);
+  width: 100%;
+  margin: 0;
   flex-wrap: wrap;
   text-align: center;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
@@ -328,8 +330,9 @@ h6 {
 
 @media (max-width: 768px) {
   .banner-section {
-    flex-direction: column !important;
-    padding: 1rem 0.8rem !important;
+    padding: 1rem 0 !important; /* Zero horizontal padding for edge-to-edge feel */
+    width: 100vw !important;
+    margin-left: calc(-50vw + 50%); /* Force break out of container if nested */
     align-items: center !important;
     gap: 0.5rem;
     min-height: auto !important;
@@ -655,10 +658,39 @@ h6 {
     display: flex !important;
     align-items: center;
     justify-content: center;
-    font-size: 0.9rem;
+    font-size: 1rem !important;
     letter-spacing: 1px;
     border: 2px solid white;
+    font-weight: 900;
   }
+}
+
+/* Back to Top Button */
+.back-to-top {
+  position: fixed;
+  bottom: 85px; /* Above the events button */
+  right: 20px;
+  background: white;
+  color: var(--primary-color);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 2003;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  border: 2px solid var(--primary-color);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
 }
 
 .events-sidebar-tab:active {
