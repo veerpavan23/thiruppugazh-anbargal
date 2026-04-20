@@ -334,15 +334,13 @@ h6 {
     width: 100vw !important;
     margin-left: calc(-50vw + 50%);
     display: flex !important;
-    flex-direction: row !important;
-    flex-wrap: wrap !important;
-    justify-content: center !important;
-    align-items: flex-start !important; /* Forces title to top */
-    gap: 0 !important; /* Remove gap to prevent line wrapping on small screens */
-    min-height: 520px !important; /* Tall enough to clear the center Murugan figure */
-    background-position: center 30% !important; /* Focus on the upper-middle background area */
-    position: relative;
-    overflow: hidden;
+    flex-direction: column !important; /* Stack simple title/logo at top */
+    align-items: center !important;
+    justify-content: flex-start !important; /* Start content at top */
+    min-height: 540px !important; /* Fixed height to keep background scale consistent */
+    background-position: center 30% !important; /* Ensure Murugan's face is centered in the gap */
+    position: relative !important;
+    overflow: hidden !important;
   }
 
   /* Reorder: center title first, then left portrait, then right portrait */
@@ -357,23 +355,36 @@ h6 {
 
   .banner-item.center {
     width: 100%;
-    flex: 0 0 100% !important;
-    margin-bottom: 0.5rem;
+    flex: 0 0 auto !important;
+    margin-bottom: 2rem;
+    z-index: 1;
   }
 
+  /* ABSOLUTE PINNING: Places portraits in bottom corners regardless of screen width */
   .banner-item.left,
   .banner-item.right {
-    flex: 0 0 42% !important; /* Reduced width to prevent wrapping across most mobile screens */
-    width: 42%;
+    position: absolute !important;
+    bottom: 10px !important;
+    width: 135px !important; /* Fixed width to prevent any overflow or stacking */
+    min-width: 0 !important; /* OVERRIDE base 300px rule */
+    flex: none !important;
     margin: 0 !important;
-    padding-top: 0 !important;
-    align-self: flex-end !important; /* Anchor precisely to the bottom of the banner */
-    margin-bottom: 20px !important;
-    z-index: 2;
+    padding: 5px !important;
+    z-index: 5 !important;
+    background: rgba(255, 255, 255, 0.4); /* Subtle glass effect for contrast */
+    border-radius: 8px;
+    backdrop-filter: blur(2px);
   }
-  
-  .banner-item.left { margin-right: 4% !important; }
-  .banner-item.right { margin-left: 4% !important; }
+
+  .banner-item.left {
+    left: 10px !important;
+    right: auto !important;
+  }
+
+  .banner-item.right {
+    right: 10px !important;
+    left: auto !important;
+  }
 
   .banner-title {
     font-size: 1.5rem !important;
@@ -382,16 +393,17 @@ h6 {
   }
 
   .banner-item img {
-    height: 120px !important;
+    height: 100px !important;
     width: auto !important;
   }
 
   .banner-item.left img,
   .banner-item.right img {
-    height: 100px !important; /* Smaller size for mobile to ensure Murugan visibility */
-    width: 80px !important;
+    height: 110px !important;
+    width: 85px !important;
     border: 2px solid white;
     object-fit: cover;
+    margin-bottom: 5px !important;
   }
 
   .banner-item p {
