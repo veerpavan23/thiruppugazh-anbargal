@@ -330,12 +330,17 @@ h6 {
 
 @media (max-width: 768px) {
   .banner-section {
-    padding: 1rem 0 !important; /* Zero horizontal padding for edge-to-edge feel */
+    padding: 1rem 0 !important;
     width: 100vw !important;
-    margin-left: calc(-50vw + 50%); /* Force break out of container if nested */
-    align-items: center !important;
-    gap: 0.5rem;
-    min-height: auto !important;
+    margin-left: calc(-50vw + 50%);
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: wrap !important;
+    justify-content: center !important;
+    align-items: flex-start !important; /* Title at top */
+    gap: 0.2rem;
+    min-height: 480px !important; /* Ensure enough height for background visibility */
+    background-position: center bottom !important; 
   }
 
   /* Reorder: center title first, then left portrait, then right portrait */
@@ -356,11 +361,12 @@ h6 {
 
   .banner-item.left,
   .banner-item.right {
-    flex: 0 0 45% !important;
-    width: 45%;
+    flex: 0 0 48% !important;
+    width: 48%;
     padding-top: 0 !important;
-    align-self: center !important;
-    margin-bottom: 0.5rem;
+    align-self: flex-end !important; /* Move portraits to the bottom */
+    margin-bottom: 10px;
+    z-index: 2;
   }
 
   .banner-title {
@@ -376,8 +382,8 @@ h6 {
 
   .banner-item.left img,
   .banner-item.right img {
-    height: 140px !important;
-    width: 110px !important;
+    height: 120px !important; /* Slightly smaller to clear more space */
+    width: 100px !important;
   }
 
   .banner-item p {
