@@ -13,15 +13,16 @@
   --line-height: 1.6;
 }
 
-html, body {
-  overflow-x: hidden;
-  width: 100%;
-}
-
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  position: relative;
 }
 
 body {
@@ -166,11 +167,18 @@ img {
   display: block;
 }
 
-/* Mobile Adjustments */
-@media (max-width: 768px) {
+/* Mobile Adjustments (Tablets and Phones) */
+@media (max-width: 992px) {
   .grid, .grid-2, .grid-3, .grid-4 {
     grid-template-columns: 1fr !important;
-    gap: 1rem !important;
+    gap: 1.5rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .grid > * {
+    width: 100% !important;
+    min-width: 0 !important;
   }
   
   .img-mobile-center {
@@ -181,17 +189,18 @@ img {
   }
 
   body {
-    font-size: 18px; /* Standardize font for better readability */
+    font-size: 18px;
   }
   .container {
-    padding: 0 1rem !important; /* Consistent padding */
+    padding: 0 1rem !important;
   }
   .card {
     padding: 1.2rem;
     margin-bottom: 1rem;
-    border-radius: 8px; /* Maintain rounded corners for premium feel */
-    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Soft shadow instead of none */
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     border: 1px solid var(--border-color);
+    overflow-x: hidden;
   }
 }
 
@@ -212,6 +221,24 @@ img {
   height: 40px;
   animation: spin 1s linear infinite;
   margin: 0 auto;
+}
+
+.guru-quote-box {
+  width: 80%;
+  margin: 30px auto;
+  text-align: center;
+  border: 2px solid var(--primary-color);
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #fff9f0;
+}
+
+@media (max-width: 992px) {
+  .guru-quote-box {
+    width: 100% !important;
+    padding: 15px !important;
+    margin: 20px 0 !important;
+  }
 }
 
 @keyframes spin {
