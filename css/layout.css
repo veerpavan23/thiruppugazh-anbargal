@@ -431,7 +431,8 @@ h6 {
 
   /* Global mobile card/container fixes */
   .container {
-    padding: 0 0.5rem !important;
+    padding: 0 1rem !important;
+    margin-top: 80px !important; /* Space for the fixed floating menu + extra breathing room */
   }
 
   .card {
@@ -486,10 +487,7 @@ h6 {
     padding: 12px !important;
   }
 
-  /* About Guruji page - inline styles override */
-  .grid.grid-2[style*="align-items"] {
-    grid-template-columns: 1fr !important;
-  }
+  /* Grid collapse handled in style.css */
 }
 
 /* App Footer */

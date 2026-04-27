@@ -128,7 +128,7 @@ textarea.form-control {
   display: grid;
   gap: 2rem;
 }
-.grid-2 { grid-template-columns: 1fr 1fr; }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
 .grid-3 { grid-template-columns: repeat(3, 1fr); }
 .grid-4 { grid-template-columns: repeat(4, 1fr); }
 
@@ -156,25 +156,42 @@ textarea.form-control {
 img {
   max-width: 100%;
   height: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.img-responsive {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
-  .grid-2, .grid-3, .grid-4 {
-    grid-template-columns: 1fr;
+  .grid, .grid-2, .grid-3, .grid-4 {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
   }
+  
+  .img-mobile-center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+  }
+
   body {
-    font-size: 20px; /* Larger base font for mobile */
+    font-size: 18px; /* Standardize font for better readability */
   }
   .container {
-    padding: 0 0.5rem; /* Tighter padding to use more screen */
+    padding: 0 1rem !important; /* Consistent padding */
   }
   .card {
     padding: 1.2rem;
     margin-bottom: 1rem;
-    border-radius: 0; /* Flush edges on mobile looks more solid */
-    box-shadow: none; /* Simplify UI for better focus */
-    border-bottom: 1px solid var(--border-color);
+    border-radius: 8px; /* Maintain rounded corners for premium feel */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Soft shadow instead of none */
+    border: 1px solid var(--border-color);
   }
 }
 
