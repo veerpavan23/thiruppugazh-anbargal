@@ -56,6 +56,23 @@
           return { name: item.name, url };
         }));
         
+        // Custom sort logic
+        pdfs.sort((a, b) => {
+          const priority = [
+            "Thiruppugazh Tamil.pdf",
+            "First portion of TIV book Tamil.pdf"
+          ];
+          
+          const idxA = priority.indexOf(a.name);
+          const idxB = priority.indexOf(b.name);
+          
+          if (idxA !== -1 && idxB !== -1) return idxA - idxB;
+          if (idxA !== -1) return -1;
+          if (idxB !== -1) return 1;
+          
+          return a.name.localeCompare(b.name);
+        });
+        
         document.getElementById('tiv-book-list').innerHTML = pdfs.map(p => `<li><a href="${p.url}" target="_blank" rel="noopener noreferrer">${p.name}</a></li>`).join('');
 
       } catch (err) {
