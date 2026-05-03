@@ -38,7 +38,8 @@ const navItems = [
       { text: "Articles", link: "articles.html" },
       { text: "Thaalam Details", link: "thalam-details.html" },
       { text: "Souveneirs", link: "souveneirs.html" },
-      { text: "Anbargal Corner", link: "anbargal-corner.html" }
+      { text: "Anbargal Corner", link: "anbargal-corner.html" },
+      { text: "Blessings", link: "blessings.html" }
     ]
   },
   { text: "Song TIV Lists With Theme", link: "songtivlist.html" },
