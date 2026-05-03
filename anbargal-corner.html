@@ -24,6 +24,13 @@
           <div class="loader"></div>
         </div>
       </div>
+
+      <h4 class="mb-1" style="border-bottom: 2px solid var(--primary-color);">Thiruchendur Chitra sabhai Books</h4>
+      <div id="thiruchendur-books-list" class="mt-1" style="margin-bottom: 25px;">
+        <div class="loader-container">
+          <div class="loader"></div>
+        </div>
+      </div>
       
       <script>
         const firebaseConfig = {
@@ -36,14 +43,14 @@
         }
         const storage = firebase.storage();
 
-        async function loadChitraMurthyBooks() {
-          const container = document.getElementById("chitra-murthy-list");
+        async function loadBooksFromFolder(folderName, containerId) {
+          const container = document.getElementById(containerId);
           try {
-            const listRef = storage.ref('chitra-murthy-books');
+            const listRef = storage.ref(folderName);
             const res = await listRef.listAll();
             
             if (res.items.length === 0) {
-              container.innerHTML = "<p>No books found in 'chitra-murthy-books' folder.</p>";
+              container.innerHTML = `<p>No books found in '${folderName}' folder.</p>`;
               return;
             }
 
@@ -62,11 +69,15 @@
               `).join('')}
             </ul>`;
           } catch (e) {
-            console.error("Error listing chitra-murthy-books folder", e);
+            console.error(`Error listing ${folderName} folder`, e);
             container.innerHTML = "<p style='color:red;'>Error loading books. Please check Firebase Storage.</p>";
           }
         }
-        document.addEventListener("DOMContentLoaded", loadChitraMurthyBooks);
+
+        document.addEventListener("DOMContentLoaded", () => {
+          loadBooksFromFolder('chitra-murthy-books', 'chitra-murthy-list');
+          loadBooksFromFolder('ThiruchendurChitrasabhai', 'thiruchendur-books-list');
+        });
       </script>
       
       <h4 class="mb-1" id="uma-balasubramanian-books" style="border-bottom: 2px solid var(--primary-color);">Uma Balasubramanian Books</h4>
@@ -84,13 +95,14 @@
           <iframe class="bhajans" src="https://www.youtube.com/embed/playlist?list=PL4MQY3mWzSNRmzHnFkhFdrK56hzfh_HwL&si=9zV5KUy8eZugUhgj" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           
           <iframe class="bhajans" src="https://www.youtube.com/embed/playlist?list=PL4MQY3mWzSNTJA55lHEBl6f-2AK8hLOeV&si=ceVFsaHz9E0LBhRE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
+ 
           <iframe class="bhajans" src="https://www.youtube.com/embed/playlist?list=PLn0nf_1Gv2f7N9epP_ci1sqhjNkbPd8a8&si=wEuzxwJttqotHCIt" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         
-        <div style="margin-top: 20px; text-align:center;">
-          <a href="https://drive.google.com/drive/folders/1DKrD4-0G52sddqojebfqi4Cb-62a-VxV?usp=sharing" target="_blank" rel="noreferrer" style="font-size:1.2em; font-weight:bold;">
-            Padma Subramanian - Kandar anubhuti with meaning
+        <h4 class="mb-1" style="border-bottom: 2px solid var(--primary-color); margin-top: 30px;">Padma Subramanian - Kandar anubhuti with meaning</h4>
+        <div style="margin-top: 15px; text-align:left;">
+          <a href="https://drive.google.com/drive/folders/1DKrD4-0G52sddqojebfqi4Cb-62a-VxV?usp=sharing" target="_blank" rel="noreferrer" style="font-size:1.1em; font-weight:bold; margin-left: 20px;">
+            → View Collection on Google Drive
           </a>
         </div>
       </div>
