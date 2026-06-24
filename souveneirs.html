@@ -10,6 +10,10 @@
     .pdf-list { display: flex; flex-direction: column; gap: 12px; font-size: 1.1em; line-height: 1.6; padding-left: 20px; }
     .pdf-list a { color: var(--primary-color); text-decoration: none; font-weight: 500; }
     .pdf-list a:hover { text-decoration: underline; }
+
+    /* Audio styles matching other pages */
+    .audio-card { background: white; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--primary-color); }
+    .audio-card h3 { margin-bottom: 10px; color: var(--primary-color); font-size: 1.1rem; }
   </style>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
@@ -17,6 +21,15 @@
 </head>
 <body>
   <main class="container mt-2">
+    <div class="card">
+      <h2 class="text-center mb-2">Centenary Souveneir 2026</h2>
+      <div id="centenary-audio-list" class="grid grid-2">
+        <div class="loader-container" style="grid-column: 1/-1;">
+          <div class="loader"></div>
+        </div>
+      </div>
+    </div>
+
     <div class="card">
       <h2 class="text-center mb-2">Souveneirs</h2>
       <div id="pdf-list" class="pdf-list">
@@ -28,6 +41,145 @@
   </main>
   <script src="js/layout.js"></script>
   <script>
+    async function loadCentenaryAudio() {
+      const container = document.getElementById('centenary-audio-list');
+      const storage = firebase.storage();
+      const pathsToTry = [
+        "AudioofSouveneir2026",
+        "souveneirs/AudioofSouveneir2026",
+        "Audio of Souvenir 2026",
+        "Audio of Souveneir 2026",
+        "Audio of Souvenirs 2026",
+        "Audio of Souveneirs 2026",
+        "souveneirs/Audio of Souvenir 2026",
+        "souveneirs/Audio of Souveneir 2026"
+      ];
+      
+      let res = null;
+      let successfulPath = "";
+      let lastError = null;
+      
+      // Try to find a path that succeeds and has files or subfolders
+      for (const path of pathsToTry) {
+        try {
+          const ref = storage.ref(path);
+          res = await ref.listAll();
+          if (res.items.length > 0 || res.prefixes.length > 0) {
+            successfulPath = path;
+            break;
+          }
+        } catch (err) {
+          lastError = err;
+        }
+      }
+      
+      // Fallback: if all were empty/failed, use first one that at least succeeded (if any)
+      if (!successfulPath) {
+        for (const path of pathsToTry) {
+          try {
+            const ref = storage.ref(path);
+            res = await ref.listAll();
+            successfulPath = path;
+            break;
+          } catch (err) {
+            lastError = err;
+          }
+        }
+      }
+      
+      if (!res) {
+        console.error(lastError);
+        container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Error loading audio.</p>';
+        await showAvailableFolders(container, storage);
+        return;
+      }
+      
+      if (res.items.length === 0) {
+        container.innerHTML = `<p class="text-center" style="grid-column: 1/-1;">No recordings found in "${successfulPath}".</p>`;
+        await showAvailableFolders(container, storage);
+        return;
+      }
+      
+      try {
+        const list = await Promise.all(res.items.map(async (item) => {
+          const url = await item.getDownloadURL();
+          let name = item.name.replace('.mp3', '').replace('.mpeg', '').replace('.wav', '').replace('.ogg', '');
+          let number = parseFloat(name.split('.')[0]) || 0;
+          return { name, url, number };
+        }));
+        list.sort((a, b) => {
+          if (a.number !== b.number) {
+            return a.number - b.number;
+          }
+          return a.name.localeCompare(b.name);
+        });
+        container.innerHTML = list.map(item => `
+          <div class="audio-card">
+            <h3>${item.name}</h3>
+            <audio controls style="width: 100%; margin-bottom: 8px;">
+              <source src="${item.url}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+            <div style="display: flex; justify-content: flex-end;">
+              <a href="${item.url}" target="_blank" rel="noopener noreferrer" style="font-size: 0.9rem; color: var(--primary-color); font-weight: bold; display: inline-flex; align-items: center; gap: 4px;">
+                <span>↗</span> Open Audio / Download
+              </a>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<p class="text-center" style="grid-column: 1/-1; color: red;">Error processing audio.</p>';
+      }
+    }
+
+    async function showAvailableFolders(container, storage) {
+      let debugHtml = `<div style="grid-column: 1/-1; margin-top: 15px; padding: 12px; background: #fff3cd; border: 1px solid #ffeeba; border-radius: 6px; font-size: 0.9em; color: #856404; text-align: left;">`;
+      debugHtml += `<strong>Debug Info - Available Storage Paths:</strong>`;
+      debugHtml += `<ul style="margin-top: 5px; padding-left: 20px;">`;
+
+      // Try root level
+      try {
+        const rootRef = storage.ref("/");
+        const rootRes = await rootRef.listAll();
+        const rootFolders = rootRes.prefixes.map(p => p.fullPath);
+        if (rootFolders.length > 0) {
+          rootFolders.forEach(f => {
+            debugHtml += `<li>Root folder: <code>${f}</code></li>`;
+          });
+        } else {
+          debugHtml += `<li>No root folders found.</li>`;
+        }
+      } catch (err) {
+        debugHtml += `<li style="color: #721c24;">Root listing blocked: <code>${err.message}</code></li>`;
+      }
+      
+      // Try souveneirs level
+      try {
+        const souvRef = storage.ref("souveneirs");
+        const souvRes = await souvRef.listAll();
+        
+        // Show files inside souveneirs
+        const files = souvRes.items.map(i => i.name);
+        debugHtml += `<li>Files in "souveneirs": [${files.join(', ')}]</li>`;
+        
+        // Show subfolders in souveneirs
+        const folders = souvRes.prefixes.map(p => p.fullPath);
+        if (folders.length > 0) {
+          folders.forEach(f => {
+            debugHtml += `<li>Sub-folder inside souveneirs: <code>${f}</code></li>`;
+          });
+        } else {
+          debugHtml += `<li>No sub-folders found inside "souveneirs".</li>`;
+        }
+      } catch (err) {
+        debugHtml += `<li style="color: #721c24;">"souveneirs" folder listing blocked: <code>${err.message}</code></li>`;
+      }
+      
+      debugHtml += `</ul></div>`;
+      container.insertAdjacentHTML('beforeend', debugHtml);
+    }
+
     async function loadSouveneirs() {
       const container = document.getElementById('pdf-list');
       try {
@@ -51,7 +203,11 @@
         container.innerHTML = '<p class="text-center" style="color: red;">Error loading souveneirs.</p>';
       }
     }
-    document.addEventListener('DOMContentLoaded', loadSouveneirs);
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadCentenaryAudio();
+      loadSouveneirs();
+    });
   </script>
 </body>
 </html>
