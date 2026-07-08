@@ -203,6 +203,7 @@
     <!-- Dependencies -->
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.5/xlsx.full.min.js"></script>
     <script src="js/layout.js"></script>
     
@@ -230,10 +231,30 @@
                 }));
                 filteredSongs = [...allSongs];
                 renderTable();
+
+                // Asynchronously resolve any Firebase Storage gs:// URLs
+                resolveGsUrls();
             } catch (err) {
                 console.error("Error fetching songs:", err);
                 tableBody.innerHTML = `<tr><td colspan="11" style="color:red; text-align:center; padding: 2rem;">Error loading collection. Please check your connection.</td></tr>`;
             }
+        }
+
+        async function resolveGsUrls() {
+            const gsSongs = allSongs.filter(song => song.tamilMeaningUrl && song.tamilMeaningUrl.startsWith('gs://'));
+            if (gsSongs.length === 0) return;
+
+            const storage = firebase.storage();
+            await Promise.all(gsSongs.map(async (song) => {
+                try {
+                    const downloadUrl = await storage.refFromURL(song.tamilMeaningUrl).getDownloadURL();
+                    song.tamilMeaningUrl = downloadUrl;
+                } catch (e) {
+                    console.error(`Error resolving storage URL for song ${song.newNumber}:`, e);
+                }
+            }));
+
+            renderTable();
         }
 
         function renderTable() {
