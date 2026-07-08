@@ -231,30 +231,24 @@
                 }));
                 filteredSongs = [...allSongs];
                 renderTable();
-
-                // Asynchronously resolve any Firebase Storage gs:// URLs
-                resolveGsUrls();
             } catch (err) {
                 console.error("Error fetching songs:", err);
                 tableBody.innerHTML = `<tr><td colspan="11" style="color:red; text-align:center; padding: 2rem;">Error loading collection. Please check your connection.</td></tr>`;
             }
         }
 
-        async function resolveGsUrls() {
-            const gsSongs = allSongs.filter(song => song.tamilMeaningUrl && song.tamilMeaningUrl.startsWith('gs://'));
-            if (gsSongs.length === 0) return;
-
-            const storage = firebase.storage();
-            await Promise.all(gsSongs.map(async (song) => {
+        async function handleTamilMeaningClick(event, url) {
+            if (url && url.startsWith('gs://')) {
+                event.preventDefault();
                 try {
-                    const downloadUrl = await storage.refFromURL(song.tamilMeaningUrl).getDownloadURL();
-                    song.tamilMeaningUrl = downloadUrl;
+                    const storage = firebase.storage();
+                    const downloadUrl = await storage.refFromURL(url).getDownloadURL();
+                    window.open(downloadUrl, '_blank', 'noopener,noreferrer');
                 } catch (e) {
-                    console.error(`Error resolving storage URL for song ${song.newNumber}:`, e);
+                    console.error("Error resolving storage URL:", e);
+                    alert("Error loading PDF from Firebase Storage.");
                 }
-            }));
-
-            renderTable();
+            }
         }
 
         function renderTable() {
@@ -279,7 +273,11 @@
                         <td>${song.oldNumber || ''}</td>
                         <td>${song.ragam || ''}</td>
                         <td>
-                            ${song.tamilMeaningUrl ? `<a href="${song.tamilMeaningUrl}" target="_blank" rel="noopener noreferrer" class="clickable-link">${song.tamilMeaning || 'View Meaning'}</a>` : (song.tamilMeaning || '-')}
+                            ${song.tamilMeaningUrl ? 
+                                (song.tamilMeaningUrl.startsWith('gs://') ? 
+                                    `<a href="#" onclick="handleTamilMeaningClick(event, '${song.tamilMeaningUrl}')" class="clickable-link">${song.tamilMeaning || 'View Meaning'}</a>` :
+                                    `<a href="${song.tamilMeaningUrl}" target="_blank" rel="noopener noreferrer" class="clickable-link">${song.tamilMeaning || 'View Meaning'}</a>`
+                                ) : (song.tamilMeaning || '-')}
                         </td>
                         <td title="${song.meaning || ''}">${song.meaning ? (song.meaning.length > 30 ? song.meaning.substring(0, 30) + '...' : song.meaning) : '-'}</td>
                         <td>${song.classify1 || ''}</td>
