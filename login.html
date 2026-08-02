@@ -28,6 +28,9 @@
             <label for="password">Password</label>
             <input type="password" id="password" class="form-control" placeholder="••••••••" required autocomplete="current-password">
           </div>
+          <div style="text-align: right; margin-bottom: 1rem;">
+            <a href="#" id="forgot-password-link" style="font-size: 0.85rem; color: var(--primary-color);">Forgot Password?</a>
+          </div>
           <button type="submit" id="login-btn" class="btn" style="width: 100%;">Sign In</button>
         </form>
       </div>
@@ -66,10 +69,34 @@
           await auth.signInWithEmailAndPassword(email, password);
           // Redirect on successful login (onAuthStateChanged will handle it)
         } catch (error) {
+          authError.style.color = 'red';
           authError.textContent = "Invalid username or password. Please try again.";
           authError.style.display = 'block';
           loginBtn.disabled = false;
           loginBtn.textContent = 'Sign In';
+        }
+      });
+
+      const forgotPasswordLink = document.getElementById('forgot-password-link');
+      forgotPasswordLink.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const email = document.getElementById('email').value;
+        if (!email) {
+          authError.style.color = 'red';
+          authError.textContent = "Please enter your email address in the field above first.";
+          authError.style.display = 'block';
+          return;
+        }
+        
+        try {
+          await auth.sendPasswordResetEmail(email);
+          authError.style.color = 'green';
+          authError.textContent = "Password reset email sent! Check your inbox.";
+          authError.style.display = 'block';
+        } catch (error) {
+          authError.style.color = 'red';
+          authError.textContent = "Error sending reset email: " + error.message;
+          authError.style.display = 'block';
         }
       });
     });
