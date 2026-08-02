@@ -47,6 +47,16 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
         }
         
+        // Hide "Manage Users" tab for non-Super Admins
+        const tabUsersBtn = document.getElementById('tab-users');
+        if (tabUsersBtn) {
+          if (userData.role === 'Super Admin') {
+            tabUsersBtn.style.display = 'inline-block';
+          } else {
+            tabUsersBtn.style.display = 'none';
+          }
+        }
+        
         if (authView) authView.style.display = 'none';
         if (dashboardView) dashboardView.style.display = 'block';
         loadAdminEvents();
