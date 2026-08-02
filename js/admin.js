@@ -21,6 +21,20 @@ document.addEventListener('DOMContentLoaded', () => {
       try {
         const userDocs = await db.collection("users").where("email", "==", user.email).get();
         if (userDocs.empty) {
+          // Emergency Fallback for the website owner to prevent total lockout
+          if (user.email === 'veer.pavan@gmail.com' || user.email === 'girijaakrish@gmail.com') {
+            await db.collection("users").add({
+              name: user.email.split('@')[0],
+              email: user.email,
+              role: "Super Admin",
+              status: "Active",
+              createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+              updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            window.location.reload();
+            return;
+          }
+          
           alert("Access Denied: Your account has been removed from the dashboard.");
           await auth.signOut();
           return;
