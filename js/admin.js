@@ -257,10 +257,28 @@ document.addEventListener('DOMContentLoaded', () => {
         alert('User details updated successfully!');
       } else {
         // Create new user using Secondary App (prevents logging out the admin)
+        
+        // First check if they are already in Firestore dashboard
+        const existingDoc = await db.collection("users").where("email", "==", email).get();
+        if (!existingDoc.empty) {
+          throw new Error("This user is already added to the dashboard. Please edit them from the list below.");
+        }
+
         const secondaryApp = firebase.initializeApp(firebase.app().options, "Secondary");
         const randomPassword = Math.random().toString(36).slice(-10) + "Aa1!";
         
-        await secondaryApp.auth().createUserWithEmailAndPassword(email, randomPassword);
+        let accountAlreadyExists = false;
+        try {
+          await secondaryApp.auth().createUserWithEmailAndPassword(email, randomPassword);
+        } catch (authErr) {
+          if (authErr.code === 'auth/email-already-in-use') {
+            accountAlreadyExists = true;
+          } else {
+            await secondaryApp.delete();
+            throw authErr;
+          }
+        }
+        
         // Send reset email so they can set their own password
         await secondaryApp.auth().sendPasswordResetEmail(email);
         await secondaryApp.delete(); // Cleanup secondary app instance
@@ -272,7 +290,11 @@ document.addEventListener('DOMContentLoaded', () => {
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         
-        alert('User created successfully! A password setup email has been sent to them.');
+        if (accountAlreadyExists) {
+          alert('User account already existed in the system. They have been added to the dashboard and a password reset email was sent.');
+        } else {
+          alert('User created successfully! A password setup email has been sent to them.');
+        }
       }
       cancelUserEdit();
       loadUsers();
