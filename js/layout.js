@@ -44,7 +44,7 @@ const navItems = [
     ]
   },
   { text: "Song TIV Lists With Theme", link: "songtivlist.html" },
-  { text: "Manage Events", link: "admin.html", isAdmin: true },
+  { text: "Admin Dashboard", link: "admin.html", isAdmin: true },
   { text: "User Feedback", link: "feedback.html", isAdmin: true }
 ];
 
