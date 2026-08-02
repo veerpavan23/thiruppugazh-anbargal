@@ -6,6 +6,7 @@ const navItems = [
       { text: "Guru Anjali", link: "guru-anjali.html" },
       { text: "Golden Rules", link: "rules.html" },
       { text: "Message from Guruji", link: "rules.html#message" },
+      { text: "Blessings from Guruji", link: "blessings.html" },
       { text: "Major Events & office Bearer", link: "events.html" }
     ]
   },

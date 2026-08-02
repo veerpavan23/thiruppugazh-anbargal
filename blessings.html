@@ -20,76 +20,66 @@
     <div class="card">
       <h1 class="text-center mb-2">Blessings</h1>
       
-      <div id="pdf-section" class="pdf-card" style="display: none;">
-        <h2>Blessings from Guruji</h2>
+      <div id="image-section" class="pdf-card" style="display: none;">
+        <h2 class="text-center">Blessings from Guruji</h2>
         
-        <div style="background: #e7f3ff; border-left: 4px solid #2196F3; padding: 12px; margin-bottom: 15px; border-radius: 4px; font-size: 0.95rem; color: #0d47a1; display: flex; align-items: flex-start; gap: 10px;">
-          <span style="font-size: 1.2rem;">ℹ️</span>
-          <p style="margin: 0;">
-            <strong>Tip:</strong> To keep this website open while clicking links inside the PDF, we recommend opening the PDF in a <strong>new tab</strong> using the button below.
-          </p>
+        <div id="images-container" style="display: flex; flex-direction: column; align-items: center; gap: 20px; width: 100%;">
+          <!-- Images will be injected here -->
         </div>
-
-        <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
-          <a id="pdf-new-tab-btn" href="#" target="_blank" class="btn" style="background: var(--primary-color); color: white; padding: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: bold; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: transform 0.2s;">
-            <span style="font-size: 1.1rem;">↗</span> Open PDF in New Tab
-          </a>
-        </div>
-
-        <div style="width: 100%; height: 800px; border-radius: 8px; overflow: hidden; background: #eee; position: relative; border: 1px solid #ddd;">
-          <iframe id="pdf-viewer" src="" style="width: 100%; height: 100%; border: none;"></iframe>
-        </div>
-        <p style="margin-top: 15px; font-size: 0.9rem; color: #666; text-align: center;">
-          Having trouble viewing? <a id="pdf-download-link" href="#" target="_blank" style="color: var(--primary-color); font-weight: bold;">Download PDF</a>
-        </p>
       </div>
 
       <div id="loading-message" class="text-center">
         <p>Loading blessings...</p>
       </div>
       <div id="error-message" class="text-center" style="display: none; color: red;">
-        <p>Error loading blessings. The file might not be available yet.</p>
+        <p>Error loading blessings. Images might not be available yet.</p>
       </div>
     </div>
   </main>
 
   <script src="js/layout.js"></script>
   <script>
-    async function loadBlessingsPDF() {
-      const pdfSection = document.getElementById('pdf-section');
-      const pdfViewer = document.getElementById('pdf-viewer');
-      const downloadLink = document.getElementById('pdf-download-link');
-      const newTabBtn = document.getElementById('pdf-new-tab-btn');
+    async function loadBlessingsImages() {
+      const imageSection = document.getElementById('image-section');
+      const imagesContainer = document.getElementById('images-container');
       const loadingMsg = document.getElementById('loading-message');
       const errorMsg = document.getElementById('error-message');
 
       try {
         const storage = firebase.storage();
-        let url;
-        try {
-          // Attempt to load 'Blessings/Blessings.pdf'
-          const pdfRef = storage.ref("Blessings/Blessings.pdf");
-          url = await pdfRef.getDownloadURL();
-        } catch (e) {
-          // Fallback to 'Blessings/Blessings'
-          const noExtRef = storage.ref("Blessings/Blessings");
-          url = await noExtRef.getDownloadURL();
+        const blessingsRef = storage.ref("Blessings");
+        const res = await blessingsRef.listAll();
+
+        const imageItems = res.items.filter(item => {
+          const name = item.name.toLowerCase();
+          return name.endsWith('.jpg') || name.endsWith('.jpeg') || name.endsWith('.png');
+        });
+
+        if (imageItems.length === 0) {
+          loadingMsg.style.display = 'none';
+          errorMsg.textContent = 'No blessing images found.';
+          errorMsg.style.display = 'block';
+          return;
+        }
+
+        let imagesHtml = '';
+        for (const item of imageItems) {
+          const url = await item.getDownloadURL();
+          imagesHtml += `<img src="${url}" alt="${item.name}" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">`;
         }
         
-        pdfViewer.src = url;
-        downloadLink.href = url;
-        newTabBtn.href = url;
+        imagesContainer.innerHTML = imagesHtml;
         
         loadingMsg.style.display = 'none';
-        pdfSection.style.display = 'block';
+        imageSection.style.display = 'block';
       } catch (err) {
-        console.error("Error loading Blessings PDF:", err);
+        console.error("Error loading Blessings images:", err);
         loadingMsg.style.display = 'none';
         errorMsg.style.display = 'block';
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadBlessingsPDF);
+    document.addEventListener('DOMContentLoaded', loadBlessingsImages);
   </script>
 </body>
 </html>
