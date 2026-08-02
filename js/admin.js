@@ -310,25 +310,38 @@ document.addEventListener('DOMContentLoaded', () => {
   async function loadUsers() {
     usersList.innerHTML = '<p class="text-center">Loading users...</p>';
     try {
-      const snapshot = await db.collection("users").orderBy("createdAt", "desc").get();
+      // Fetch all users without orderBy to avoid missing documents that lack a createdAt field
+      const snapshot = await db.collection("users").get();
+      
       if (snapshot.empty) {
         usersList.innerHTML = '<p class="text-center">No users found. Create one above.</p>';
         return;
       }
       
-      let html = '';
+      // Convert to array and sort client-side (newest first based on createdAt or fallback)
+      const users = [];
       snapshot.forEach(doc => {
-        const data = doc.data();
+        users.push({ id: doc.id, ...doc.data() });
+      });
+      
+      users.sort((a, b) => {
+        const timeA = a.createdAt ? a.createdAt.toMillis() : 0;
+        const timeB = b.createdAt ? b.createdAt.toMillis() : 0;
+        return timeB - timeA;
+      });
+
+      let html = '';
+      users.forEach(data => {
         html += `
           <div class="event-item" style="border-left: 4px solid #2196F3;">
             <div>
-              <h4 style="margin-bottom: 0.25rem;">${data.name} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role}</span></h4>
+              <h4 style="margin-bottom: 0.25rem;">${data.name || 'Unknown'} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role || 'Admin'}</span></h4>
               <small style="color: #666;">${data.email}</small>
             </div>
             <div class="event-actions">
-              <button class="btn btn-secondary btn-small" onclick='editUser("${doc.id}", ${JSON.stringify(data).replace(/'/g, "&#39;")})'>Edit</button>
+              <button class="btn btn-secondary btn-small" onclick='editUser("${data.id}", ${JSON.stringify(data).replace(/'/g, "&#39;")})'>Edit</button>
               <button class="btn btn-secondary btn-small" onclick="resetUserPassword('${data.email}')">Reset Password</button>
-              <button class="btn btn-danger btn-small" onclick="deleteUserRecord('${doc.id}', '${data.email}')">Delete</button>
+              <button class="btn btn-danger btn-small" onclick="deleteUserRecord('${data.id}', '${data.email}')">Delete</button>
             </div>
           </div>
         `;
@@ -336,30 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
       usersList.innerHTML = html;
     } catch (error) {
       console.error("Error loading users:", error);
-      // Fallback without ordering
-      try {
-        const snapshot = await db.collection("users").get();
-        let html = '';
-        snapshot.forEach(doc => {
-          const data = doc.data();
-          html += `
-            <div class="event-item" style="border-left: 4px solid #2196F3;">
-              <div>
-                <h4 style="margin-bottom: 0.25rem;">${data.name} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role}</span></h4>
-                <small style="color: #666;">${data.email}</small>
-              </div>
-              <div class="event-actions">
-                <button class="btn btn-secondary btn-small" onclick='editUser("${doc.id}", ${JSON.stringify(data).replace(/'/g, "&#39;")})'>Edit</button>
-                <button class="btn btn-secondary btn-small" onclick="resetUserPassword('${data.email}')">Reset Password</button>
-                <button class="btn btn-danger btn-small" onclick="deleteUserRecord('${doc.id}', '${data.email}')">Delete</button>
-              </div>
-            </div>
-          `;
-        });
-        usersList.innerHTML = html || '<p class="text-center">No users found.</p>';
-      } catch (err) {
-        usersList.innerHTML = '<p class="text-center" style="color:red;">Error loading users.</p>';
-      }
+      usersList.innerHTML = '<p class="text-center" style="color:red;">Error loading users.</p>';
     }
   }
 
