@@ -16,14 +16,35 @@ document.addEventListener('DOMContentLoaded', () => {
   const eventsList = document.getElementById('events-list');
 
   // Listen for auth state changes
-  auth.onAuthStateChanged(user => {
+  auth.onAuthStateChanged(async (user) => {
     if (user) {
-      if (authView) authView.style.display = 'none';
-      if (dashboardView) dashboardView.style.display = 'block';
-      loadAdminEvents();
+      try {
+        const userDocs = await db.collection("users").where("email", "==", user.email).get();
+        if (userDocs.empty) {
+          alert("Access Denied: Your account has been removed from the dashboard.");
+          await auth.signOut();
+          return;
+        }
+        
+        const userData = userDocs.docs[0].data();
+        if (userData.status === 'Inactive') {
+          alert("Access Denied: Your account has been deactivated by the administrator.");
+          await auth.signOut();
+          return;
+        }
+        
+        if (authView) authView.style.display = 'none';
+        if (dashboardView) dashboardView.style.display = 'block';
+        loadAdminEvents();
+      } catch (err) {
+        console.error("Auth check error:", err);
+        // Fallback if firestore rules block us or fail
+        if (authView) authView.style.display = 'none';
+        if (dashboardView) dashboardView.style.display = 'block';
+        loadAdminEvents();
+      }
     } else {
-      if (authView) authView.style.display = 'block';
-      if (dashboardView) dashboardView.style.display = 'none';
+      window.location.href = 'login.html';
     }
   });
 
@@ -242,6 +263,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const name = document.getElementById('userName').value;
     const email = document.getElementById('userEmail').value;
     const role = document.getElementById('userRole').value;
+    const status = document.getElementById('userStatus').value;
     const submitBtn = document.getElementById('save-user-btn');
 
     submitBtn.disabled = true;
@@ -251,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (id) {
         // Update existing user details in Firestore
         await db.collection("users").doc(id).update({
-          name, role,
+          name, role, status,
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         alert('User details updated successfully!');
@@ -285,7 +307,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Save to Firestore
         await db.collection("users").add({
-          name, email, role,
+          name, email, role, status,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         });
@@ -332,10 +354,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let html = '';
       users.forEach(data => {
+        const statusColor = data.status === 'Inactive' ? '#f44336' : '#4CAF50';
+        const statusText = data.status || 'Active';
+        
         html += `
           <div class="event-item" style="border-left: 4px solid #2196F3;">
             <div>
-              <h4 style="margin-bottom: 0.25rem;">${data.name || 'Unknown'} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role || 'Admin'}</span></h4>
+              <h4 style="margin-bottom: 0.25rem;">${data.name || 'Unknown'} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role || 'Admin'}</span> <span style="font-size: 0.8rem; background: ${statusColor}; color: white; padding: 2px 6px; border-radius: 4px; margin-left: 4px;">${statusText}</span></h4>
               <small style="color: #666;">${data.email}</small>
             </div>
             <div class="event-actions">
@@ -359,6 +384,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('userEmail').value = data.email || '';
     document.getElementById('userEmail').disabled = true; // Prevent changing email
     document.getElementById('userRole').value = data.role || 'Admin';
+    document.getElementById('userStatus').value = data.status || 'Active';
     
     document.getElementById('user-form-title').textContent = 'Edit User Details';
     userFormContainer.style.display = 'block';

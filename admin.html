@@ -119,13 +119,22 @@
                   <input type="email" id="userEmail" class="form-control" required>
                 </div>
               </div>
-              <div class="form-group" style="margin-bottom: 1rem;">
-                <label for="userRole">Role *</label>
-                <select id="userRole" class="form-control" required>
-                  <option value="Admin">Admin</option>
-                  <option value="Editor">Editor</option>
-                  <option value="Viewer">Viewer</option>
-                </select>
+              <div class="grid grid-2" style="margin-bottom: 1rem;">
+                <div class="form-group">
+                  <label for="userRole">Role *</label>
+                  <select id="userRole" class="form-control" required>
+                    <option value="Admin">Admin</option>
+                    <option value="Editor">Editor</option>
+                    <option value="Viewer">Viewer</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="userStatus">Account Status *</label>
+                  <select id="userStatus" class="form-control" required>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                  </select>
+                </div>
               </div>
               <div style="display: flex; gap: 1rem;">
                 <button type="submit" id="save-user-btn" class="btn">Create User</button>

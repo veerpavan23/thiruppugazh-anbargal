@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="css/admin.css">
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
   <script src="js/config.js"></script>
 </head>
 <body>
@@ -67,10 +68,24 @@
 
         try {
           await auth.signInWithEmailAndPassword(email, password);
+          
+          // Verify access control
+          const db = firebase.firestore();
+          const userDocs = await db.collection("users").where("email", "==", email).get();
+          if (userDocs.empty) {
+            await auth.signOut();
+            throw new Error("Your account has been removed from the dashboard.");
+          }
+          const userData = userDocs.docs[0].data();
+          if (userData.status === 'Inactive') {
+            await auth.signOut();
+            throw new Error("Your account has been deactivated by the administrator.");
+          }
+          
           // Redirect on successful login (onAuthStateChanged will handle it)
         } catch (error) {
           authError.style.color = 'red';
-          authError.textContent = "Invalid username or password. Please try again.";
+          authError.textContent = error.message || "Invalid username or password. Please try again.";
           authError.style.display = 'block';
           loginBtn.disabled = false;
           loginBtn.textContent = 'Sign In';
