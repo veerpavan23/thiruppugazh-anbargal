@@ -35,12 +35,17 @@
       <!-- Dashboard View -->
       <div id="admin-dashboard" style="display: block;">
         <!-- Title and Logout -->
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-          <h2 id="dashboard-header">Manage Events</h2>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+          <h2 id="dashboard-header">Admin Dashboard</h2>
           <button id="logout-btn" class="btn btn-secondary btn-small">Sign Out</button>
         </div>
 
-        <div id="manage-events" class="admin-tab-content active">
+        <div class="admin-tabs" style="display: flex; gap: 1rem; border-bottom: 2px solid #eee; margin-bottom: 2rem; padding-bottom: 0.5rem;">
+          <button id="tab-events" class="btn active" style="background: var(--primary-color); color: white;" onclick="switchAdminTab('events')">Manage Events</button>
+          <button id="tab-users" class="btn btn-secondary" onclick="switchAdminTab('users')">Manage Users</button>
+        </div>
+
+        <div id="manage-events" class="admin-tab-content" style="display: block;">
           <div id="event-form-container" style="display: none;">
             <h3 id="form-title">Create New Event</h3>
             <form id="event-form">
@@ -95,6 +100,46 @@
             <p class="text-center">Loading events...</p>
           </div>
           </div>
+        </div>
+
+        <!-- Manage Users Section -->
+        <div id="manage-users" class="admin-tab-content" style="display: none;">
+          <div id="user-form-container" style="display: none; margin-bottom: 2rem; padding: 1rem; border: 1px solid #ddd; border-radius: 8px;">
+            <h3 id="user-form-title">Create New User</h3>
+            <p style="font-size: 0.9rem; color: #666; margin-bottom: 1rem;">This will create the user account and send them an email to set their password.</p>
+            <form id="user-form">
+              <input type="hidden" id="user-doc-id">
+              <div class="grid grid-2">
+                <div class="form-group">
+                  <label for="userName">Name *</label>
+                  <input type="text" id="userName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                  <label for="userEmail">Email Address *</label>
+                  <input type="email" id="userEmail" class="form-control" required>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom: 1rem;">
+                <label for="userRole">Role *</label>
+                <select id="userRole" class="form-control" required>
+                  <option value="Admin">Admin</option>
+                  <option value="Editor">Editor</option>
+                  <option value="Viewer">Viewer</option>
+                </select>
+              </div>
+              <div style="display: flex; gap: 1rem;">
+                <button type="submit" id="save-user-btn" class="btn">Create User</button>
+                <button type="button" class="btn btn-secondary" onclick="cancelUserEdit()">Cancel</button>
+              </div>
+            </form>
+          </div>
+
+          <button id="add-user-btn" class="btn" style="margin-bottom: 2rem;" onclick="showAddUserForm()">+ Add New User</button>
+          
+          <div id="users-list" class="event-list">
+            <p class="text-center">Loading users...</p>
+          </div>
+        </div>
         </div>
       </div>
     </div>

@@ -192,4 +192,187 @@ document.addEventListener('DOMContentLoaded', () => {
     eventForm.reset();
     document.getElementById('event-id').value = '';
   }
+
+  // ---- USER MANAGEMENT LOGIC ----
+
+  window.switchAdminTab = function(tab) {
+    document.getElementById('manage-events').style.display = tab === 'events' ? 'block' : 'none';
+    document.getElementById('manage-users').style.display = tab === 'users' ? 'block' : 'none';
+    
+    document.getElementById('tab-events').className = tab === 'events' ? 'btn active' : 'btn btn-secondary';
+    document.getElementById('tab-users').className = tab === 'users' ? 'btn active' : 'btn btn-secondary';
+
+    if (tab === 'events') {
+      document.getElementById('tab-events').style.background = 'var(--primary-color)';
+      document.getElementById('tab-events').style.color = 'white';
+      document.getElementById('tab-users').style.background = '';
+      document.getElementById('tab-users').style.color = '';
+    } else {
+      document.getElementById('tab-users').style.background = 'var(--primary-color)';
+      document.getElementById('tab-users').style.color = 'white';
+      document.getElementById('tab-events').style.background = '';
+      document.getElementById('tab-events').style.color = '';
+      loadUsers();
+    }
+  };
+
+  const userFormContainer = document.getElementById('user-form-container');
+  const userForm = document.getElementById('user-form');
+  const addUserBtn = document.getElementById('add-user-btn');
+  const usersList = document.getElementById('users-list');
+
+  window.showAddUserForm = function() {
+    userForm.reset();
+    document.getElementById('user-doc-id').value = '';
+    document.getElementById('userEmail').disabled = false;
+    document.getElementById('user-form-title').textContent = 'Create New User';
+    userFormContainer.style.display = 'block';
+    addUserBtn.style.display = 'none';
+  };
+
+  window.cancelUserEdit = function() {
+    userFormContainer.style.display = 'none';
+    addUserBtn.style.display = 'block';
+    userForm.reset();
+  };
+
+  userForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const id = document.getElementById('user-doc-id').value;
+    const name = document.getElementById('userName').value;
+    const email = document.getElementById('userEmail').value;
+    const role = document.getElementById('userRole').value;
+    const submitBtn = document.getElementById('save-user-btn');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Saving...';
+
+    try {
+      if (id) {
+        // Update existing user details in Firestore
+        await db.collection("users").doc(id).update({
+          name, role,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        alert('User details updated successfully!');
+      } else {
+        // Create new user using Secondary App (prevents logging out the admin)
+        const secondaryApp = firebase.initializeApp(firebase.app().options, "Secondary");
+        const randomPassword = Math.random().toString(36).slice(-10) + "Aa1!";
+        
+        await secondaryApp.auth().createUserWithEmailAndPassword(email, randomPassword);
+        // Send reset email so they can set their own password
+        await secondaryApp.auth().sendPasswordResetEmail(email);
+        await secondaryApp.delete(); // Cleanup secondary app instance
+
+        // Save to Firestore
+        await db.collection("users").add({
+          name, email, role,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        
+        alert('User created successfully! A password setup email has been sent to them.');
+      }
+      cancelUserEdit();
+      loadUsers();
+    } catch (error) {
+      console.error("Error saving user:", error);
+      alert('Error saving user: ' + error.message);
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = id ? 'Update User' : 'Create User';
+    }
+  });
+
+  async function loadUsers() {
+    usersList.innerHTML = '<p class="text-center">Loading users...</p>';
+    try {
+      const snapshot = await db.collection("users").orderBy("createdAt", "desc").get();
+      if (snapshot.empty) {
+        usersList.innerHTML = '<p class="text-center">No users found. Create one above.</p>';
+        return;
+      }
+      
+      let html = '';
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        html += `
+          <div class="event-item" style="border-left: 4px solid #2196F3;">
+            <div>
+              <h4 style="margin-bottom: 0.25rem;">${data.name} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role}</span></h4>
+              <small style="color: #666;">${data.email}</small>
+            </div>
+            <div class="event-actions">
+              <button class="btn btn-secondary btn-small" onclick='editUser("${doc.id}", ${JSON.stringify(data).replace(/'/g, "&#39;")})'>Edit</button>
+              <button class="btn btn-secondary btn-small" onclick="resetUserPassword('${data.email}')">Reset Password</button>
+              <button class="btn btn-danger btn-small" onclick="deleteUserRecord('${doc.id}', '${data.email}')">Delete</button>
+            </div>
+          </div>
+        `;
+      });
+      usersList.innerHTML = html;
+    } catch (error) {
+      console.error("Error loading users:", error);
+      // Fallback without ordering
+      try {
+        const snapshot = await db.collection("users").get();
+        let html = '';
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          html += `
+            <div class="event-item" style="border-left: 4px solid #2196F3;">
+              <div>
+                <h4 style="margin-bottom: 0.25rem;">${data.name} <span style="font-size: 0.8rem; background: #eee; padding: 2px 6px; border-radius: 4px; margin-left: 8px;">${data.role}</span></h4>
+                <small style="color: #666;">${data.email}</small>
+              </div>
+              <div class="event-actions">
+                <button class="btn btn-secondary btn-small" onclick='editUser("${doc.id}", ${JSON.stringify(data).replace(/'/g, "&#39;")})'>Edit</button>
+                <button class="btn btn-secondary btn-small" onclick="resetUserPassword('${data.email}')">Reset Password</button>
+                <button class="btn btn-danger btn-small" onclick="deleteUserRecord('${doc.id}', '${data.email}')">Delete</button>
+              </div>
+            </div>
+          `;
+        });
+        usersList.innerHTML = html || '<p class="text-center">No users found.</p>';
+      } catch (err) {
+        usersList.innerHTML = '<p class="text-center" style="color:red;">Error loading users.</p>';
+      }
+    }
+  }
+
+  window.editUser = function(id, data) {
+    document.getElementById('user-doc-id').value = id;
+    document.getElementById('userName').value = data.name || '';
+    document.getElementById('userEmail').value = data.email || '';
+    document.getElementById('userEmail').disabled = true; // Prevent changing email
+    document.getElementById('userRole').value = data.role || 'Admin';
+    
+    document.getElementById('user-form-title').textContent = 'Edit User Details';
+    userFormContainer.style.display = 'block';
+    addUserBtn.style.display = 'none';
+    window.scrollTo({ top: userFormContainer.offsetTop - 100, behavior: 'smooth' });
+  };
+
+  window.resetUserPassword = async function(email) {
+    if(confirm('Send a password reset email to ' + email + '?')) {
+      try {
+        await firebase.auth().sendPasswordResetEmail(email);
+        alert('Password reset email sent to ' + email);
+      } catch (error) {
+        alert('Error sending reset email: ' + error.message);
+      }
+    }
+  };
+
+  window.deleteUserRecord = async function(id, email) {
+    if(confirm('Delete user record for ' + email + '? Note: This only deletes their Firestore profile, not their Authentication account.')) {
+      try {
+        await db.collection("users").doc(id).delete();
+        loadUsers();
+      } catch(error) {
+        alert('Failed to delete user profile: ' + error.message);
+      }
+    }
+  };
 });
