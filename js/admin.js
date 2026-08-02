@@ -326,7 +326,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         // Send reset email so they can set their own password
-        await secondaryApp.auth().sendPasswordResetEmail(email);
+        const actionCodeSettings = {
+          url: window.location.origin + '/login.html',
+          handleCodeInApp: false
+        };
+        await secondaryApp.auth().sendPasswordResetEmail(email, actionCodeSettings);
         await secondaryApp.delete(); // Cleanup secondary app instance
 
         // Save to Firestore
@@ -419,7 +423,11 @@ document.addEventListener('DOMContentLoaded', () => {
   window.resetUserPassword = async function(email) {
     if(confirm('Send a password reset email to ' + email + '?')) {
       try {
-        await firebase.auth().sendPasswordResetEmail(email);
+        const actionCodeSettings = {
+          url: window.location.origin + '/login.html',
+          handleCodeInApp: false
+        };
+        await firebase.auth().sendPasswordResetEmail(email, actionCodeSettings);
         alert('Password reset email sent to ' + email);
       } catch (error) {
         alert('Error sending reset email: ' + error.message);

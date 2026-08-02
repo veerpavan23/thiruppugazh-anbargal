@@ -117,7 +117,11 @@
         }
         
         try {
-          await auth.sendPasswordResetEmail(email);
+          const actionCodeSettings = {
+            url: window.location.origin + '/login.html',
+            handleCodeInApp: false
+          };
+          await auth.sendPasswordResetEmail(email, actionCodeSettings);
           authError.style.color = 'green';
           authError.textContent = "Password reset email sent! Check your inbox.";
           authError.style.display = 'block';
