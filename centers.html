@@ -135,13 +135,51 @@
           <h3 style="margin-bottom:10px; border-bottom: 2px solid var(--primary-color);">Contacts India</h3>
           <table class="contacts-table" id="contacts-india">
             <thead><tr><th>Name</th><th>Place</th><th>Phone</th></tr></thead>
-            <tbody><tr><td colspan="3"><div class="loader-container"><div class="loader"></div></div></td></tr></tbody>
+            <tbody>
+<tr><td>Sri Kupsubramanian</td><td>Bangalore</td><td>9845949771</td></tr>
+<tr><td>Sri Santhanam</td><td>Bangalore</td><td>9900541239</td></tr>
+<tr><td>Mrs Rama</td><td>Baroda</td><td>9727766292</td></tr>
+<tr><td>Sri A.S. Mani</td><td>Bombay</td><td>9820993406</td></tr>
+<tr><td>Smt Usha Gopalan</td><td>Bombay</td><td>8333959217</td></tr>
+<tr><td>Sri Muthuswamy</td><td>Chennai</td><td>9444140101</td></tr>
+<tr><td>Sri S. Arunachalam</td><td>Chennai</td><td>9444937335</td></tr>
+<tr><td>Smt Uma Balasubramanian</td><td>Chennai</td><td>9884054757</td></tr>
+<tr><td>Sri Vaidyanathan</td><td>Coimbatore</td><td>9994158712</td></tr>
+<tr><td>Sri VS Krishnan</td><td>Coimbatore</td><td>6381606744</td></tr>
+<tr><td>Sri S.Ganesh</td><td>Delhi</td><td>9810413265</td></tr>
+<tr><td>Smt Girija</td><td>Delhi</td><td>9953727467</td></tr>
+<tr><td>Smt Usha Shankaran</td><td>Hyderabad</td><td>8333959217</td></tr>
+<tr><td>Dr Girija Krishnan</td><td>Hyderabad</td><td>9848812301</td></tr>
+<tr><td>Mr Viji Kumar</td><td>Kolkata</td><td>9874753777</td></tr>
+<tr><td>Smt Raja Lakshmi</td><td>Madurai</td><td>8754321398</td></tr>
+<tr><td>Smt Jayanthi</td><td>Pondicherry</td><td>9841441388</td></tr>
+<tr><td>Smt Dharini Ganesh</td><td>Pune</td><td>8793685864</td></tr>
+<tr><td>Smt Bhuvana</td><td>Tanjore, Trichy</td><td>9940274037</td></tr>
+<tr><td>Sri Balu Iyer</td><td>Thiruvananthapuram</td><td>9447092866</td></tr>
+            </tbody>
           </table>
 
           <h3 style="margin-top:20px; margin-bottom:10px; border-bottom: 2px solid var(--primary-color);">Contacts Overseas</h3>
           <table class="contacts-table" id="contacts-overseas">
             <thead><tr><th>Name</th><th>Place</th><th>Phone</th></tr></thead>
-            <tbody><tr><td colspan="3"><div class="loader-container"><div class="loader"></div></div></td></tr></tbody>
+            <tbody>
+<tr><td>Sri Krishnan Anantharaman</td><td>Abu Dhabi</td><td>+971 507529526</td></tr>
+<tr><td>Smt Shanta Krishnamurthy</td><td>Canada, Toronto</td><td>-</td></tr>
+<tr><td>Mrs Vidya Ram</td><td>Dubai</td><td>+971 50 5518246</td></tr>
+<tr><td>Sri Srirama</td><td>Dubai</td><td>+971 501505631</td></tr>
+<tr><td>Smt Lalitha</td><td>London</td><td>+44 2089304131</td></tr>
+<tr><td>Mrs Janaki Vishwanath</td><td>Singapore</td><td>+65 9670 9855</td></tr>
+<tr><td>Gayathri Raghuram</td><td>USA, Bay Area</td><td>+1 847 571 3298</td></tr>
+<tr><td>Uma Ramgopal</td><td>USA, Bay Area</td><td>+1 510 936 4353</td></tr>
+<tr><td>Mala Ramakrishnan</td><td>USA, Boston</td><td>+1 978 263 3720</td></tr>
+<tr><td>Sri Arunagiri</td><td>USA, California</td><td>+1 510 366 5771</td></tr>
+<tr><td>Purna Sethuraman</td><td>USA, Chicago</td><td>+1 630 806 6500</td></tr>
+<tr><td>Lakshmi Srivats</td><td>USA, Huoston</td><td>+1 8327241563</td></tr>
+<tr><td>Kanti Sundar</td><td>USA, Michigan</td><td>+1 (248) 3101404</td></tr>
+<tr><td>Subha Srinivasan</td><td>USA, New Jersey</td><td>+1 609 902 4091</td></tr>
+<tr><td>Jayshree Ramakrishnan</td><td>USA, New Jersey</td><td>+1 908 2492467</td></tr>
+<tr><td>Smt Maha Krishnan</td><td>USA, Texas</td><td>+1 713 594 5844</td></tr>
+            </tbody>
           </table>
 
           <h3 style="margin-top:20px; margin-bottom:10px; border-bottom: 2px solid var(--primary-color);">Online classes</h3>
@@ -157,50 +195,5 @@
   
   <script src="js/layout.js"></script>
 
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBZj1DcjriYkzGsu6su5mgVdzFD0yC4-r8",
-      authDomain: "thiruppugazhanbargal-515e8.firebaseapp.com",
-      projectId: "thiruppugazhanbargal-515e8",
-      storageBucket: "thiruppugazhanbargal-515e8.appspot.com",
-    };
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
-    }
-    const db = firebase.firestore();
-
-    async function loadContacts() {
-      try {
-        const snapshot = await db.collection("phoneNumbers").orderBy("state", "asc").get();
-        let indiaHtml = '';
-        let overseasHtml = '';
-        
-        snapshot.forEach(doc => {
-          const contact = doc.data();
-          const row = `<tr>
-            <td>${contact.name || ''}</td>
-            <td>${contact.state || ''}</td>
-            <td>${contact.number || ''}</td>
-          </tr>`;
-          
-          if (contact.isIndia) {
-            indiaHtml += row;
-          } else {
-            overseasHtml += row;
-          }
-        });
-        
-        document.getElementById('contacts-india').querySelector('tbody').innerHTML = indiaHtml || '<tr><td colspan="3">No contacts</td></tr>';
-        document.getElementById('contacts-overseas').querySelector('tbody').innerHTML = overseasHtml || '<tr><td colspan="3">No contacts</td></tr>';
-      } catch (err) {
-        console.error("Firebase Firestore Error: ", err);
-        const errHtml = '<tr><td colspan="3" style="color:red;">Error loading contacts.</td></tr>';
-        document.getElementById('contacts-india').querySelector('tbody').innerHTML = errHtml;
-        document.getElementById('contacts-overseas').querySelector('tbody').innerHTML = errHtml;
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', loadContacts);
-  </script>
 </body>
 </html>
