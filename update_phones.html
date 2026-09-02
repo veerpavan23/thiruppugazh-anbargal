@@ -3,6 +3,7 @@
 <head>
   <title>Update Contacts</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 </head>
 <body style="font-family: sans-serif; padding: 20px;">
@@ -21,12 +22,18 @@
       firebase.initializeApp(firebaseConfig);
     }
     const db = firebase.firestore();
+    const auth = firebase.auth();
 
     document.getElementById('runBtn').addEventListener('click', async () => {
       const logEl = document.getElementById('log');
       const log = (msg) => logEl.innerHTML += `<div>${msg}</div>`;
       
-      log("Starting update...");
+      auth.onAuthStateChanged(async (user) => {
+        if (!user) {
+          log("<span style='color:red'>Error: You must be logged into the Admin Dashboard in another tab first!</span>");
+          return;
+        }
+        log("Starting update as " + user.email + "...");
       
       const updates = [
         { oldNum: "9448089383", newName: "Sri Santhanam", newNum: "9900541239" },
@@ -54,6 +61,7 @@
         }
       }
       log("<strong>Done! You can close this page.</strong>");
+      }); // End of onAuthStateChanged
     });
   </script>
 </body>
