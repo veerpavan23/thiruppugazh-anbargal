@@ -198,8 +198,16 @@ function renderLayout() {
   `;
 
   const footerHtml = `
-    <footer class="app-footer">
-      <p>&copy; ${new Date().getFullYear()} Thiruppugazh Anbargal. Built for the community.</p>
+    <footer class="app-footer" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; padding: 20px;">
+      <div style="display: flex; gap: 20px; align-items: center; justify-content: center;">
+        <a href="https://youtube.com/@thiruppugazhanbargal?si=sIQFo2n6NoGykf8N" target="_blank" title="YouTube Channel" style="text-decoration: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#ff0000" style="transition: transform 0.2s; hover: transform: scale(1.1);"><path d="M21.582,6.186c-0.23-0.86-0.908-1.538-1.768-1.768C18.254,4,12,4,12,4S5.746,4,4.186,4.418 c-0.86,0.23-1.538,0.908-1.768,1.768C2,7.746,2,12,2,12s0,4.254,0.418,5.814c0.23,0.86,0.908,1.538,1.768,1.768 C5.746,20,12,20,12,20s6.254,0,7.814-0.418c0.861-0.23,1.538-0.908,1.768-1.768C22,16.254,22,12,22,12S22,7.746,21.582,6.186z M9.996,15.005V8.995L15.004,12L9.996,15.005z"/></svg>
+        </a>
+        <a href="https://m.facebook.com/story.php?story_fbid=pfbid02TgMSQ9o2ubhqNMNoKVdkSbArR7n1PNe1GFfvfMb7vJqxdEAJ2QhLwCfrkCFRRhFLl&id=100068088687176&mibextid=Nif5oz" target="_blank" title="Facebook Page" style="text-decoration: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="#1877F2" style="transition: transform 0.2s; hover: transform: scale(1.1);"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.879V14.89h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.989C18.343 21.129 22 16.99 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        </a>
+      </div>
+      <p style="margin: 0;">&copy; ${new Date().getFullYear()} Thiruppugazh Anbargal. Built for the community.</p>
     </footer>
   `;
 
